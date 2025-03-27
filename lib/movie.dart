@@ -1,6 +1,9 @@
+import 'package:floor/floor.dart';
+
+@entity
 class Movie {
   final bool adult;
-  final List<int> genreIds;
+  @primaryKey
   final int id;
   final String originalLanguage;
   final String originalTitle;
@@ -14,7 +17,6 @@ class Movie {
 
   Movie({
     required this.adult,
-    required this.genreIds,
     required this.id,
     required this.originalLanguage,
     required this.originalTitle,
@@ -30,7 +32,6 @@ class Movie {
   factory Movie.fromJson(json) {
     return Movie(
       adult: json['adult'],
-      genreIds: json['genre_ids'].cast<int>(),
       id: json['id'],
       originalLanguage: json['original_language'],
       originalTitle: json['original_title'],
