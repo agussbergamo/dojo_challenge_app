@@ -22,9 +22,8 @@ class MoviesBloc implements IMoviesBloc {
   }
 
   @override
-  Future<void> initialize() {
-    // TODO: implement initialize
-    throw UnimplementedError();
+  Future<void> initialize() async {
+    _streamController.sink.add(<Movie>[]);
   }
 
   @override

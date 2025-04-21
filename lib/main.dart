@@ -1,6 +1,7 @@
+import 'package:dojo_challenge_app/popular_movies.dart';
+
 import 'api_service.dart';
 import 'database_service.dart';
-import 'movie.dart';
 import 'movie_repository.dart';
 import 'movies_bloc.dart';
 import 'package:flutter/material.dart';
@@ -17,41 +18,44 @@ void main() async {
 
   runApp(
     MaterialApp(
-      home: SafeArea(
-        child: Scaffold(
-          body: Column(
-            children: [
-              TextButton(
-                onPressed: moviesBloc.getPopularMovies,
-                child: Text('Get movies'),
-              ),
-              Expanded(
-                child: StreamBuilder<List<Movie>>(
-                  stream: moviesBloc.moviesStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No movies found'));
-                    } else {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(snapshot.data![index].title),
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+      debugShowCheckedModeBanner: false,
+      title: 'Dojo Challenge App',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       ),
+      home: const MyHomePage(),
+      routes: <String, WidgetBuilder>{
+        '/popular-movies':
+            (BuildContext context) => PopularMovies(moviesBloc: moviesBloc),
+      },
     ),
   );
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text('Movies app'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Wanna see some popular movies?'),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/popular-movies');
+              },
+              child: Text('Take me there!'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
