@@ -1,5 +1,5 @@
-import 'package:dojo_challenge_app/movie.dart';
-import 'package:dojo_challenge_app/movies_bloc.dart';
+import 'package:dojo_challenge_app/domain/entities/movie.dart';
+import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:flutter/material.dart';
 
 class PopularMovies extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'dart:convert' as convert;
-import 'movie.dart';
+import '../../../domain/entities/movie.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {

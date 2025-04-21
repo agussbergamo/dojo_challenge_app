@@ -1,4 +1,4 @@
-import 'movie.dart';
+import '../../../../domain/entities/movie.dart';
 import 'package:floor/floor.dart';
 
 @dao

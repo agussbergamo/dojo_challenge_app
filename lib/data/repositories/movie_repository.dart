@@ -1,6 +1,6 @@
-import 'api_service.dart';
-import 'database_service.dart';
-import 'movie.dart';
+import '../datasource/remote/api_service.dart';
+import '../datasource/local/database_service.dart';
+import '../../domain/entities/movie.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class MovieRepository {

@@ -1,5 +1,5 @@
 import 'database.dart';
-import 'movie.dart';
+import '../../../domain/entities/movie.dart';
 
 class DatabaseService {
   static DatabaseService? _instance;

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'movie.dart';
-import 'movie_dao.dart';
+import '../../../domain/entities/movie.dart';
+import 'DAOs/movie_dao.dart';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 

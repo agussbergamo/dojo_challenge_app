@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'i_movies_bloc.dart';
-import 'movie.dart';
-import 'movie_repository.dart';
+import '../../domain/entities/movie.dart';
+import '../../data/repositories/movie_repository.dart';
 
 class MoviesBloc implements IMoviesBloc {
   final StreamController<List<Movie>> _streamController =

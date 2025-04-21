@@ -1,9 +1,9 @@
-import 'package:dojo_challenge_app/popular_movies.dart';
+import 'package:dojo_challenge_app/presentation/screens/popular_movies.dart';
 
-import 'api_service.dart';
-import 'database_service.dart';
-import 'movie_repository.dart';
-import 'movies_bloc.dart';
+import 'data/datasource/remote/api_service.dart';
+import 'data/datasource/local/database_service.dart';
+import 'data/repositories/movie_repository.dart';
+import 'presentation/bloc/movies_bloc.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

@@ -1,5 +1,5 @@
-import 'i_bloc.dart';
-import 'movie.dart';
+import '../../core/bloc/i_bloc.dart';
+import '../../domain/entities/movie.dart';
 
 abstract class IMoviesBloc implements IBloc {
 
