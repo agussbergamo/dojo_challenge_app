@@ -1,22 +1,25 @@
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
+import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PopularMovies extends StatefulWidget {
-  const PopularMovies({super.key, required this.moviesBloc});
-
-  final MoviesBloc moviesBloc;
+class PopularMovies extends ConsumerStatefulWidget {
+  const PopularMovies({super.key});
 
   @override
-  State<PopularMovies> createState() => _PopularMoviesState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PopularMoviesState();
 }
 
-class _PopularMoviesState extends State<PopularMovies> {
+class _PopularMoviesState extends ConsumerState<PopularMovies> {
+  late final MoviesBloc moviesBloc;
+
   @override
   void initState() {
     super.initState();
-    widget.moviesBloc.initialize();
-    widget.moviesBloc.getPopularMovies();
+    moviesBloc = ref.read(moviesBlocProvider);
+    moviesBloc.initialize();
+    moviesBloc.getPopularMovies();
   }
 
   @override
@@ -25,7 +28,7 @@ class _PopularMoviesState extends State<PopularMovies> {
       child: Scaffold(
         appBar: AppBar(title: Text('Popular Movies')),
         body: StreamBuilder<List<Movie>>(
-          stream: widget.moviesBloc.moviesStream,
+          stream: moviesBloc.moviesStream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -37,9 +40,7 @@ class _PopularMoviesState extends State<PopularMovies> {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(snapshot.data![index].title),
-                  );
+                  return ListTile(title: Text(snapshot.data![index].title));
                 },
               );
             }

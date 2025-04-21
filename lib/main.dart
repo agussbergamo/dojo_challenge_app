@@ -1,33 +1,27 @@
 import 'package:dojo_challenge_app/presentation/screens/popular_movies.dart';
-
-import 'data/datasource/remote/api_service.dart';
+import 'package:dojo_challenge_app/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'data/datasource/local/database_service.dart';
-import 'data/repositories/movie_repository.dart';
-import 'presentation/bloc/movies_bloc.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  DatabaseService databaseService = await DatabaseService.getInstance();
-  ApiService apiService = ApiService();
-  MovieRepository movieRepository = MovieRepository(
-    apiService: apiService,
-    databaseService: databaseService,
-  );
-  MoviesBloc moviesBloc = MoviesBloc(movieRepository: movieRepository);
+  final DatabaseService databaseService = await DatabaseService.getInstance();
 
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Dojo Challenge App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+    ProviderScope(
+      overrides: [databaseServiceProvider.overrideWithValue(databaseService)],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Dojo Challenge App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+        ),
+        home: const MyHomePage(),
+        routes: <String, WidgetBuilder>{
+          '/popular-movies': (BuildContext context) => PopularMovies(),
+        },
       ),
-      home: const MyHomePage(),
-      routes: <String, WidgetBuilder>{
-        '/popular-movies':
-            (BuildContext context) => PopularMovies(moviesBloc: moviesBloc),
-      },
     ),
   );
 }
