@@ -7,6 +7,8 @@ class DatabaseService {
 
   DatabaseService._(this.database);
 
+  DatabaseService.test(this.database);
+
   static Future<DatabaseService> getInstance() async {
     if (_instance == null) {
       final database =
