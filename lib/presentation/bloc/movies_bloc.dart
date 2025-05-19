@@ -1,4 +1,7 @@
 import 'dart:async';
+
+import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+
 import 'i_movies_bloc.dart';
 import '../../domain/entities/movie.dart';
 import '../../data/repositories/movie_repository.dart';
@@ -16,8 +19,8 @@ class MoviesBloc implements IMoviesBloc {
   }
 
   @override
-  Future<void> getPopularMovies() async {
-    List<Movie> popularMovies = await movieRepository.getPopularMovies();
+  Future<void> getPopularMovies(DataSource? dataSource) async {
+    List<Movie> popularMovies = await movieRepository.getPopularMovies(dataSource: dataSource);
     _streamController.sink.add(popularMovies);
   }
 

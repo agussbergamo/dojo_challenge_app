@@ -1,3 +1,4 @@
+import 'package:dojo_challenge_app/core/parameter/data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
@@ -5,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PopularMovies extends ConsumerStatefulWidget {
-  const PopularMovies({super.key});
+  final DataSource? dataSource;
+  const PopularMovies({super.key, this.dataSource});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PopularMoviesState();
@@ -19,7 +21,7 @@ class _PopularMoviesState extends ConsumerState<PopularMovies> {
     super.initState();
     moviesBloc = ref.read(moviesBlocProvider);
     moviesBloc.initialize();
-    moviesBloc.getPopularMovies();
+    moviesBloc.getPopularMovies(widget.dataSource);
   }
 
   @override
