@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "776825087706",
+    "project_id": "dojo-challenge-app",
+    "storage_bucket": "dojo-challenge-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776825087706:android:f6f3e0a77d617448ada7e3",
+        "android_client_info": {
+          "package_name": "com.example.dojo_challenge_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFKNbOKEBA75PvEm9L6xbagIkPYv1eNYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

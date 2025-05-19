@@ -1,0 +1,53 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "dojo-challenge-app",
+          "appId": "1:776825087706:android:f6f3e0a77d617448ada7e3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "dojo-challenge-app",
+          "appId": "1:776825087706:ios:626127e14ae4b078ada7e3",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "dojo-challenge-app",
+          "appId": "1:776825087706:ios:626127e14ae4b078ada7e3",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "dojo-challenge-app",
+          "configurations": {
+            "android": "1:776825087706:android:f6f3e0a77d617448ada7e3",
+            "ios": "1:776825087706:ios:626127e14ae4b078ada7e3",
+            "macos": "1:776825087706:ios:626127e14ae4b078ada7e3",
+            "web": "1:776825087706:web:fd47b2b8343e32c1ada7e3",
+            "windows": "1:776825087706:web:d00a10a459935d24ada7e3"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}
