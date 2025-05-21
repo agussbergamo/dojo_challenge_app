@@ -1,15 +1,18 @@
 import 'dart:convert' as convert;
+import 'package:dojo_challenge_app/domain/datasources/i_data_source.dart';
+
 import '../../../domain/entities/movie.dart';
 import 'package:http/http.dart' as http;
 
-class ApiService {
+class ApiDataSource implements IDataSource{
   final http.Client client; 
   final String endpoint = 'https://api.themoviedb.org/3/movie/popular';
   final String apiKey = '?api_key=';
   final String apiKeyValue = '025aa98c350d497beb053d9b5e169637';
 
-  ApiService({required this.client});
+  ApiDataSource({required this.client});
 
+  @override
   Future<List<Movie>> getPopularMovies() async {
     final url = Uri.parse('$endpoint$apiKey$apiKeyValue');
     final response = await client.get(url);

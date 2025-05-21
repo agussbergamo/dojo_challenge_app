@@ -114,7 +114,7 @@ class _$MovieDao extends MovieDao {
   _$MovieDao(
     this.database,
     this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database, changeListener),
+  )   : _queryAdapter = QueryAdapter(database),
         _movieInsertionAdapter = InsertionAdapter(
             database,
             'Movie',
@@ -130,8 +130,7 @@ class _$MovieDao extends MovieDao {
                   'video': item.video ? 1 : 0,
                   'voteAverage': item.voteAverage,
                   'voteCount': item.voteCount
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -142,8 +141,9 @@ class _$MovieDao extends MovieDao {
   final InsertionAdapter<Movie> _movieInsertionAdapter;
 
   @override
-  Future<List<Movie>> getMovies() async {
-    return _queryAdapter.queryList('SELECT * FROM Movie',
+  Future<List<Movie>> getPopularMovies() async {
+    return _queryAdapter.queryList(
+        'Select * from Movie ORDER BY popularity DESC LIMIT 20',
         mapper: (Map<String, Object?> row) => Movie(
             adult: (row['adult'] as int) != 0,
             id: row['id'] as int,
@@ -156,26 +156,6 @@ class _$MovieDao extends MovieDao {
             video: (row['video'] as int) != 0,
             voteAverage: row['voteAverage'] as double,
             voteCount: row['voteCount'] as int));
-  }
-
-  @override
-  Stream<Movie?> getMovieById(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Movie WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Movie(
-            adult: (row['adult'] as int) != 0,
-            id: row['id'] as int,
-            originalLanguage: row['originalLanguage'] as String,
-            originalTitle: row['originalTitle'] as String,
-            overview: row['overview'] as String,
-            popularity: row['popularity'] as double,
-            releaseDate: row['releaseDate'] as String,
-            title: row['title'] as String,
-            video: (row['video'] as int) != 0,
-            voteAverage: row['voteAverage'] as double,
-            voteCount: row['voteCount'] as int),
-        arguments: [id],
-        queryableName: 'Movie',
-        isView: false);
   }
 
   @override

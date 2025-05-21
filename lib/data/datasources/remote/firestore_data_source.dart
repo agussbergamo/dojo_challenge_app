@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dojo_challenge_app/domain/datasources/i_data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 
-class FirestoreService {
+class FirestoreDataSource implements IDataSource {
   final FirebaseFirestore firestore;
 
-  FirestoreService(this.firestore);
+  FirestoreDataSource(this.firestore);
 
   Future<void> saveMovie(Movie movie) async {
     await firestore.collection('movies').doc(movie.id.toString()).set({
@@ -22,7 +23,8 @@ class FirestoreService {
     });
   }
 
-  Future<List<Movie>> getMovies() async {
+  @override
+  Future<List<Movie>> getPopularMovies() async {
     final snapshot = await firestore.collection('movies').get();
     final movies =
         snapshot.docs.map((doc) {

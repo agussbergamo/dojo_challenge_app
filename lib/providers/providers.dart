@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dojo_challenge_app/providers/auth_state.dart';
+import 'package:dojo_challenge_app/core/auth/auth_state.dart';
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
-import 'package:dojo_challenge_app/data/datasource/local/database_service.dart';
-import 'package:dojo_challenge_app/data/datasource/remote/api_service.dart';
-import 'package:dojo_challenge_app/data/datasource/remote/firestore_service.dart';
+import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
+import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
+import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
 import 'package:dojo_challenge_app/data/repositories/movie_repository.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/presentation/screens/home_page.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 
-final databaseServiceProvider = Provider<DatabaseService>((ref) {
+final databaseDataSourceProvider = Provider<DatabaseDataSource>((ref) {
   //This throws an UnimplementedError because it's being overriden in main.
   //It's handled this way to prevent all providers from being FutureProviders.
   throw UnimplementedError();
@@ -24,23 +24,23 @@ final httpClientProvider = Provider<http.Client>((ref) {
   return http.Client();
 });
 
-final apiServiceProvider = Provider<ApiService>((ref) {
+final apiDataSourceProvider = Provider<ApiDataSource>((ref) {
   final client = ref.watch(httpClientProvider);
-  return ApiService(client: client);
+  return ApiDataSource(client: client);
 });
 
-final firestoreServiceProvider = Provider<FirestoreService>((ref) {
-  return FirestoreService(FirebaseFirestore.instance);
+final firestoreDataSourceProvider = Provider<FirestoreDataSource>((ref) {
+  return FirestoreDataSource(FirebaseFirestore.instance);
 });
 
 final movieRepositoryProvider = Provider<MovieRepository>((ref) {
-  final apiService = ref.watch(apiServiceProvider);
-  final databaseService = ref.watch(databaseServiceProvider);
-  final firestoreService = ref.watch(firestoreServiceProvider);
+  final apiDataSource = ref.watch(apiDataSourceProvider);
+  final databaseDataSource = ref.watch(databaseDataSourceProvider);
+  final firestoreDataSource = ref.watch(firestoreDataSourceProvider);
   return MovieRepository(
-    apiService: apiService,
-    databaseService: databaseService,
-    firestoreService: firestoreService,
+    apiDataSource: apiDataSource,
+    databaseDataSource: databaseDataSource,
+    firestoreDataSource: firestoreDataSource,
   );
 });
 

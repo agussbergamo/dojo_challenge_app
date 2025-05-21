@@ -3,11 +3,8 @@ import 'package:floor/floor.dart';
 
 @dao
 abstract class MovieDao {
-  @Query('SELECT * FROM Movie')
-  Future<List<Movie>> getMovies();
-
-  @Query('SELECT * FROM Movie WHERE id = :id')
-  Stream<Movie?> getMovieById(int id);
+  @Query('Select * from Movie ORDER BY popularity DESC LIMIT 20')
+  Future<List<Movie>> getPopularMovies();
 
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertMovie(Movie movie);
