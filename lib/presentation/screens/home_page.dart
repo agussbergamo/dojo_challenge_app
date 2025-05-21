@@ -10,7 +10,7 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appState = ref.watch(authStateProvider);
+    final authState = ref.watch(authStateProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Movies App')),
@@ -22,7 +22,7 @@ class MyHomePage extends ConsumerWidget {
             const SizedBox(height: 20),
             OutlinedButton(
               onPressed: () {
-                if (appState.loggedIn) {
+                if (authState.loggedIn) {
                   context.push('/popular-movies', extra: DataSource.api);
                 } else {
                   context.push('/sign-in');
@@ -33,7 +33,7 @@ class MyHomePage extends ConsumerWidget {
             const SizedBox(height: 16),
             OutlinedButton(
               onPressed: () {
-                if (appState.loggedIn) {
+                if (authState.loggedIn) {
                   context.push('/popular-movies', extra: DataSource.local);
                 } else {
                   context.push('/sign-in');
@@ -44,7 +44,7 @@ class MyHomePage extends ConsumerWidget {
             const SizedBox(height: 16),
             OutlinedButton(
               onPressed: () {
-                if (appState.loggedIn) {
+                if (authState.loggedIn) {
                   context.push('/popular-movies', extra: DataSource.firestore);
                 } else {
                   context.push('/sign-in');
@@ -55,13 +55,13 @@ class MyHomePage extends ConsumerWidget {
             const SizedBox(height: 20),
             OutlinedButton(
               onPressed: () {
-                if (appState.loggedIn) {
+                if (authState.loggedIn) {
                   FirebaseAuth.instance.signOut();
                 } else {
                   context.push('/sign-in');
                 }
               },
-              child: Text(appState.loggedIn ? 'Logout' : 'Login'),
+              child: Text(authState.loggedIn ? 'Logout' : 'Login'),
             ),
           ],
         ),

@@ -1,12 +1,12 @@
-import 'package:dojo_challenge_app/data/datasource/local/database.dart';
-import 'package:dojo_challenge_app/data/datasource/local/database_service.dart';
-import 'package:dojo_challenge_app/data/datasource/local/DAOs/movie_dao.dart';
+import 'package:dojo_challenge_app/data/datasources/local/database.dart';
+import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
+import 'package:dojo_challenge_app/data/datasources/local/DAOs/movie_dao.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'database_service_test.mocks.dart';
+import 'database_data_source_test.mocks.dart';
 
 @GenerateMocks([AppDatabase, MovieDao])
 void main() {
@@ -35,24 +35,24 @@ void main() {
 
   test('getMovies returns a list of movies', () async {
     when(mockAppDatabase.movieDao).thenReturn(mockMovieDao);
-    when(mockMovieDao.getMovies()).thenAnswer((_) async => <Movie>[]);
+    when(mockMovieDao.getPopularMovies()).thenAnswer((_) async => <Movie>[]);
 
-    final databaseService = DatabaseService.test(mockAppDatabase);
+    final databaseDataSource = DatabaseDataSource.test(mockAppDatabase);
 
-    final result = await databaseService.getMovies();
+    final result = await databaseDataSource.getPopularMovies();
 
     expect(result, isA<List<Movie>>());
     verify(mockAppDatabase.movieDao).called(1);
-    verify(mockMovieDao.getMovies()).called(1);
+    verify(mockMovieDao.getPopularMovies()).called(1);
   });
 
   test('insertMovies inserts a mockMovie into the database, through the MovieDAO', () async {
     when(mockAppDatabase.movieDao).thenReturn(mockMovieDao);
     when(mockMovieDao.insertMovie(mockMovie)).thenAnswer((_) async {});
 
-    final databaseService = DatabaseService.test(mockAppDatabase);
+    final databaseDataSource = DatabaseDataSource.test(mockAppDatabase);
 
-    await databaseService.insertMovie(mockMovie);
+    await databaseDataSource.insertMovie(mockMovie);
     verify(mockMovieDao.insertMovie(mockMovie)).called(1);
   });
 }

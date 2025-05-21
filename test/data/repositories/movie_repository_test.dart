@@ -1,5 +1,7 @@
-import 'package:dojo_challenge_app/data/datasource/local/database_service.dart';
-import 'package:dojo_challenge_app/data/datasource/remote/api_service.dart';
+import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
+import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
+import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
 import 'package:dojo_challenge_app/data/repositories/movie_repository.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:mockito/annotations.dart';
@@ -9,11 +11,18 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'movie_repository_test.mocks.dart';
 
-@GenerateMocks([ApiService, DatabaseService, Connectivity])
+@GenerateMocks([
+  ApiDataSource,
+  DatabaseDataSource,
+  FirestoreDataSource,
+  Connectivity,
+])
 void main() {
-  late MockApiService mockApiService;
-  late MockDatabaseService mockDatabaseService;
+  late MockApiDataSource mockApiDataSource;
+  late MockDatabaseDataSource mockDatabaseDataSource;
+  late MockFirestoreDataSource mockFirestoreDataSource;
   late MockConnectivity mockConnectivity;
+  late MovieRepository movieRepository;
 
   final Movie mockMovie = Movie.fromJson({
     "adult": false,
@@ -31,32 +40,69 @@ void main() {
   });
 
   setUp(() {
-    mockApiService = MockApiService();
-    mockDatabaseService = MockDatabaseService();
+    mockApiDataSource = MockApiDataSource();
+    mockDatabaseDataSource = MockDatabaseDataSource();
+    mockFirestoreDataSource = MockFirestoreDataSource();
     mockConnectivity = MockConnectivity();
+    movieRepository = MovieRepository(
+      apiDataSource: mockApiDataSource,
+      databaseDataSource: mockDatabaseDataSource,
+      firestoreDataSource: mockFirestoreDataSource,
+      connectivityPlugin: mockConnectivity,
+    );
   });
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    "getPopularMovies method returns a List of Movies when the service call is successful",
+    "getPopularMovies method returns a List of Movies when the datasource is not specified, the internet connection is enabled and the API call is successful",
     () async {
       when(
-        mockApiService.getPopularMovies(),
+        mockApiDataSource.getPopularMovies(),
       ).thenAnswer((_) async => [mockMovie]);
       when(
         mockConnectivity.checkConnectivity(),
       ).thenAnswer((_) async => [ConnectivityResult.wifi]);
 
-      final movieRepository = MovieRepository(
-        apiService: mockApiService,
-        databaseService: mockDatabaseService,
-        connectivityPlugin: mockConnectivity,
-      );
       final result = await movieRepository.getPopularMovies();
       expect(result, isA<List<Movie>>());
-      verify(mockApiService.getPopularMovies()).called(1);
-      verifyNever(mockDatabaseService.getMovies());
+      verify(mockApiDataSource.getPopularMovies()).called(1);
+      verifyNever(mockDatabaseDataSource.getPopularMovies());
+      verifyNever(mockFirestoreDataSource.getPopularMovies());
+    },
+  );
+
+  test(
+    "getPopularMovies method returns a List of Movies when the specified source is Firestore",
+    () async {
+      when(
+        mockFirestoreDataSource.getPopularMovies(),
+      ).thenAnswer((_) async => [mockMovie]);
+
+      final result = await movieRepository.getPopularMovies(
+        dataSource: DataSource.firestore,
+      );
+      expect(result, isA<List<Movie>>());
+      verify(mockFirestoreDataSource.getPopularMovies()).called(1);
+      verifyNever(mockDatabaseDataSource.getPopularMovies());
+      verifyNever(mockApiDataSource.getPopularMovies());
+    },
+  );
+
+  test(
+    "getPopularMovies method returns a List of Movies when the specified source is Local",
+    () async {
+      when(
+        mockDatabaseDataSource.getPopularMovies(),
+      ).thenAnswer((_) async => [mockMovie]);
+
+      final result = await movieRepository.getPopularMovies(
+        dataSource: DataSource.local,
+      );
+      expect(result, isA<List<Movie>>());
+      verify(mockDatabaseDataSource.getPopularMovies()).called(1);
+      verifyNever(mockFirestoreDataSource.getPopularMovies());
+      verifyNever(mockApiDataSource.getPopularMovies());
     },
   );
 
@@ -64,42 +110,33 @@ void main() {
     "getPopularMovies method returns a List of Movies when the internet connection is disabled",
     () async {
       when(
-        mockApiService.getPopularMovies(),
+        mockApiDataSource.getPopularMovies(),
       ).thenAnswer((_) async => [mockMovie]);
       when(
         mockConnectivity.checkConnectivity(),
       ).thenAnswer((_) async => [ConnectivityResult.none]);
 
-      when(mockDatabaseService.getMovies()).thenAnswer((_) async => <Movie>[]);
+      when(
+        mockDatabaseDataSource.getPopularMovies(),
+      ).thenAnswer((_) async => <Movie>[]);
 
-      final movieRepository = MovieRepository(
-        apiService: mockApiService,
-        databaseService: mockDatabaseService,
-        connectivityPlugin: mockConnectivity,
-      );
-
-      final serviceResult = await movieRepository.getPopularMovies();
-      expect(serviceResult, isA<List<Movie>>());
-      verify(mockDatabaseService.getMovies()).called(1);
-      verifyNever(mockApiService.getPopularMovies());
+      final result = await movieRepository.getPopularMovies();
+      expect(result, isA<List<Movie>>());
+      verify(mockDatabaseDataSource.getPopularMovies()).called(1);
+      verifyNever(mockApiDataSource.getPopularMovies());
+      verifyNever(mockFirestoreDataSource.getPopularMovies());
     },
   );
 
   test(
-    "getPopularMovies method catches an Exception when the service call fails",
+    "getPopularMovies method catches an Exception when the API call fails",
     () async {
       when(
-        mockApiService.getPopularMovies(),
+        mockApiDataSource.getPopularMovies(),
       ).thenAnswer((_) => throw Exception('Error fetching data'));
       when(
         mockConnectivity.checkConnectivity(),
       ).thenAnswer((_) async => [ConnectivityResult.wifi]);
-
-      final movieRepository = MovieRepository(
-        apiService: mockApiService,
-        databaseService: mockDatabaseService,
-        connectivityPlugin: mockConnectivity,
-      );
 
       expect(
         () => movieRepository.getPopularMovies(),

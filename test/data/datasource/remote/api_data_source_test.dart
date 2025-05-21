@@ -1,4 +1,4 @@
-import 'package:dojo_challenge_app/data/datasource/remote/api_service.dart';
+import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'api_service_test.mocks.dart';
+import 'api_data_source_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() {
@@ -44,8 +44,8 @@ void main() {
         mockClient.get(any),
       ).thenAnswer((_) async => http.Response(jsonEncode(mockJson), 200));
 
-      final apiService = ApiService(client: mockClient);
-      final movies = await apiService.getPopularMovies();
+      final apiDataSource = ApiDataSource(client: mockClient);
+      final movies = await apiDataSource.getPopularMovies();
 
       expect(movies, isA<List<Movie>>());
       expect(movies.first.title, equals('A Working Man'));
@@ -57,10 +57,10 @@ void main() {
       mockClient.get(any),
     ).thenAnswer((_) async => http.Response('Not Found', 404));
 
-    final apiService = ApiService(client: mockClient);
+    final apiDataSource = ApiDataSource(client: mockClient);
 
     expect(
-      () async => await apiService.getPopularMovies(),
+      () async => await apiDataSource.getPopularMovies(),
       throwsA(isA<Exception>()),
     );
   });

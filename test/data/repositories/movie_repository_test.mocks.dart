@@ -3,20 +3,23 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i7;
 
-import 'package:connectivity_plus/connectivity_plus.dart' as _i9;
+import 'package:cloud_firestore/cloud_firestore.dart' as _i4;
+import 'package:connectivity_plus/connectivity_plus.dart' as _i11;
 import 'package:connectivity_plus_platform_interface/connectivity_plus_platform_interface.dart'
+    as _i12;
+import 'package:dojo_challenge_app/data/datasources/local/database.dart' as _i3;
+import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart'
+    as _i9;
+import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart'
+    as _i5;
+import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart'
     as _i10;
-import 'package:dojo_challenge_app/data/datasource/local/database.dart' as _i3;
-import 'package:dojo_challenge_app/data/datasource/local/database_service.dart'
-    as _i8;
-import 'package:dojo_challenge_app/data/datasource/remote/api_service.dart'
-    as _i4;
-import 'package:dojo_challenge_app/domain/entities/movie.dart' as _i7;
+import 'package:dojo_challenge_app/domain/entities/movie.dart' as _i8;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
+import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -52,11 +55,22 @@ class _FakeAppDatabase_1 extends _i1.SmartFake implements _i3.AppDatabase {
         );
 }
 
-/// A class which mocks [ApiService].
+class _FakeFirebaseFirestore_2 extends _i1.SmartFake
+    implements _i4.FirebaseFirestore {
+  _FakeFirebaseFirestore_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [ApiDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockApiService extends _i1.Mock implements _i4.ApiService {
-  MockApiService() {
+class MockApiDataSource extends _i1.Mock implements _i5.ApiDataSource {
+  MockApiDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -72,7 +86,7 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
   @override
   String get endpoint => (super.noSuchMethod(
         Invocation.getter(#endpoint),
-        returnValue: _i5.dummyValue<String>(
+        returnValue: _i6.dummyValue<String>(
           this,
           Invocation.getter(#endpoint),
         ),
@@ -81,7 +95,7 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
   @override
   String get apiKey => (super.noSuchMethod(
         Invocation.getter(#apiKey),
-        returnValue: _i5.dummyValue<String>(
+        returnValue: _i6.dummyValue<String>(
           this,
           Invocation.getter(#apiKey),
         ),
@@ -90,27 +104,28 @@ class MockApiService extends _i1.Mock implements _i4.ApiService {
   @override
   String get apiKeyValue => (super.noSuchMethod(
         Invocation.getter(#apiKeyValue),
-        returnValue: _i5.dummyValue<String>(
+        returnValue: _i6.dummyValue<String>(
           this,
           Invocation.getter(#apiKeyValue),
         ),
       ) as String);
 
   @override
-  _i6.Future<List<_i7.Movie>> getPopularMovies() => (super.noSuchMethod(
+  _i7.Future<List<_i8.Movie>> getPopularMovies() => (super.noSuchMethod(
         Invocation.method(
           #getPopularMovies,
           [],
         ),
-        returnValue: _i6.Future<List<_i7.Movie>>.value(<_i7.Movie>[]),
-      ) as _i6.Future<List<_i7.Movie>>);
+        returnValue: _i7.Future<List<_i8.Movie>>.value(<_i8.Movie>[]),
+      ) as _i7.Future<List<_i8.Movie>>);
 }
 
-/// A class which mocks [DatabaseService].
+/// A class which mocks [DatabaseDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDatabaseService extends _i1.Mock implements _i8.DatabaseService {
-  MockDatabaseService() {
+class MockDatabaseDataSource extends _i1.Mock
+    implements _i9.DatabaseDataSource {
+  MockDatabaseDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -124,48 +139,86 @@ class MockDatabaseService extends _i1.Mock implements _i8.DatabaseService {
       ) as _i3.AppDatabase);
 
   @override
-  _i6.Future<List<_i7.Movie>> getMovies() => (super.noSuchMethod(
+  _i7.Future<List<_i8.Movie>> getPopularMovies() => (super.noSuchMethod(
         Invocation.method(
-          #getMovies,
+          #getPopularMovies,
           [],
         ),
-        returnValue: _i6.Future<List<_i7.Movie>>.value(<_i7.Movie>[]),
-      ) as _i6.Future<List<_i7.Movie>>);
+        returnValue: _i7.Future<List<_i8.Movie>>.value(<_i8.Movie>[]),
+      ) as _i7.Future<List<_i8.Movie>>);
 
   @override
-  _i6.Future<void> insertMovie(_i7.Movie? movie) => (super.noSuchMethod(
+  _i7.Future<void> insertMovie(_i8.Movie? movie) => (super.noSuchMethod(
         Invocation.method(
           #insertMovie,
           [movie],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+}
+
+/// A class which mocks [FirestoreDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirestoreDataSource extends _i1.Mock
+    implements _i10.FirestoreDataSource {
+  MockFirestoreDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.FirebaseFirestore get firestore => (super.noSuchMethod(
+        Invocation.getter(#firestore),
+        returnValue: _FakeFirebaseFirestore_2(
+          this,
+          Invocation.getter(#firestore),
+        ),
+      ) as _i4.FirebaseFirestore);
+
+  @override
+  _i7.Future<void> saveMovie(_i8.Movie? movie) => (super.noSuchMethod(
+        Invocation.method(
+          #saveMovie,
+          [movie],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<List<_i8.Movie>> getPopularMovies() => (super.noSuchMethod(
+        Invocation.method(
+          #getPopularMovies,
+          [],
+        ),
+        returnValue: _i7.Future<List<_i8.Movie>>.value(<_i8.Movie>[]),
+      ) as _i7.Future<List<_i8.Movie>>);
 }
 
 /// A class which mocks [Connectivity].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockConnectivity extends _i1.Mock implements _i9.Connectivity {
+class MockConnectivity extends _i1.Mock implements _i11.Connectivity {
   MockConnectivity() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Stream<List<_i10.ConnectivityResult>> get onConnectivityChanged =>
+  _i7.Stream<List<_i12.ConnectivityResult>> get onConnectivityChanged =>
       (super.noSuchMethod(
         Invocation.getter(#onConnectivityChanged),
-        returnValue: _i6.Stream<List<_i10.ConnectivityResult>>.empty(),
-      ) as _i6.Stream<List<_i10.ConnectivityResult>>);
+        returnValue: _i7.Stream<List<_i12.ConnectivityResult>>.empty(),
+      ) as _i7.Stream<List<_i12.ConnectivityResult>>);
 
   @override
-  _i6.Future<List<_i10.ConnectivityResult>> checkConnectivity() =>
+  _i7.Future<List<_i12.ConnectivityResult>> checkConnectivity() =>
       (super.noSuchMethod(
         Invocation.method(
           #checkConnectivity,
           [],
         ),
-        returnValue: _i6.Future<List<_i10.ConnectivityResult>>.value(
-            <_i10.ConnectivityResult>[]),
-      ) as _i6.Future<List<_i10.ConnectivityResult>>);
+        returnValue: _i7.Future<List<_i12.ConnectivityResult>>.value(
+            <_i12.ConnectivityResult>[]),
+      ) as _i7.Future<List<_i12.ConnectivityResult>>);
 }
