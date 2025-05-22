@@ -4,7 +4,8 @@ import 'package:dojo_challenge_app/core/parameter/data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
-import 'package:dojo_challenge_app/data/repositories/movie_repository.dart';
+import 'package:dojo_challenge_app/data/repositories/movies_repository.dart';
+import 'package:dojo_challenge_app/domain/usecases/implementations/movies_usecase.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/presentation/screens/home_page.dart';
 import 'package:dojo_challenge_app/presentation/screens/popular_movies.dart';
@@ -33,20 +34,25 @@ final firestoreDataSourceProvider = Provider<FirestoreDataSource>((ref) {
   return FirestoreDataSource(FirebaseFirestore.instance);
 });
 
-final movieRepositoryProvider = Provider<MovieRepository>((ref) {
+final moviesRepositoryProvider = Provider<MoviesRepository>((ref) {
   final apiDataSource = ref.watch(apiDataSourceProvider);
   final databaseDataSource = ref.watch(databaseDataSourceProvider);
   final firestoreDataSource = ref.watch(firestoreDataSourceProvider);
-  return MovieRepository(
+  return MoviesRepository(
     apiDataSource: apiDataSource,
     databaseDataSource: databaseDataSource,
     firestoreDataSource: firestoreDataSource,
   );
 });
 
+final moviesUseCaseProvider = Provider<MoviesUseCase>((ref) {
+  final moviesRepository = ref.watch(moviesRepositoryProvider);
+  return MoviesUseCase(moviesRepository: moviesRepository);
+});
+
 final moviesBlocProvider = Provider<MoviesBloc>((ref) {
-  final movieRepository = ref.watch(movieRepositoryProvider);
-  return MoviesBloc(movieRepository: movieRepository);
+  final moviesUseCase = ref.watch(moviesUseCaseProvider);
+  return MoviesBloc(moviesUsecase: moviesUseCase);
 });
 
 final authStateProvider = ChangeNotifierProvider<AuthState>((ref) {

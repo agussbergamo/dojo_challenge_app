@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/domain/usecases/interfaces/i_usecase.dart';
 
 import 'i_movies_bloc.dart';
 import '../../domain/entities/movie.dart';
-import '../../data/repositories/movie_repository.dart';
 
 class MoviesBloc implements IMoviesBloc {
   final StreamController<List<Movie>> _streamController =
       StreamController<List<Movie>>.broadcast();
-  final MovieRepository movieRepository;
+  final IUseCase moviesUsecase;
 
-  MoviesBloc({required this.movieRepository});
+  MoviesBloc({required this.moviesUsecase});
 
   @override
   void dispose() {
@@ -19,8 +19,8 @@ class MoviesBloc implements IMoviesBloc {
   }
 
   @override
-  Future<void> getPopularMovies(DataSource? dataSource) async {
-    List<Movie> popularMovies = await movieRepository.getPopularMovies(dataSource: dataSource);
+  Future<void> getPopularMovies({DataSource? dataSource}) async {
+    List<Movie> popularMovies = await moviesUsecase.call(dataSource: dataSource);
     _streamController.sink.add(popularMovies);
   }
 

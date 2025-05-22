@@ -7,6 +7,6 @@ abstract class IMoviesBloc implements IBloc {
 
   Stream<List<Movie>> get moviesStream;
 
-  Future<void> getPopularMovies(DataSource dataSource); 
+  Future<void> getPopularMovies({DataSource dataSource}); 
 
 }

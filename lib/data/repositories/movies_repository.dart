@@ -7,13 +7,13 @@ import '../datasources/local/database_data_source.dart';
 import '../../domain/entities/movie.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-class MovieRepository implements IMoviesRepository  {
+class MoviesRepository implements IMoviesRepository {
   final ApiDataSource apiDataSource;
   final DatabaseDataSource databaseDataSource;
   final FirestoreDataSource firestoreDataSource;
   final Connectivity connectivity;
 
-  MovieRepository({
+  MoviesRepository({
     required this.apiDataSource,
     required this.databaseDataSource,
     required this.firestoreDataSource,

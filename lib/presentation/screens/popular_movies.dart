@@ -21,7 +21,7 @@ class _PopularMoviesState extends ConsumerState<PopularMovies> {
     super.initState();
     moviesBloc = ref.read(moviesBlocProvider);
     moviesBloc.initialize();
-    moviesBloc.getPopularMovies(widget.dataSource);
+    moviesBloc.getPopularMovies(dataSource: widget.dataSource);
   }
 
   @override
