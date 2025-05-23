@@ -6,9 +6,9 @@
 import 'dart:async' as _i4;
 
 import 'package:dojo_challenge_app/core/parameter/data_source.dart' as _i6;
-import 'package:dojo_challenge_app/data/repositories/movie_repository.dart'
-    as _i2;
 import 'package:dojo_challenge_app/domain/entities/movie.dart' as _i5;
+import 'package:dojo_challenge_app/domain/usecases/interfaces/i_usecase.dart'
+    as _i2;
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -26,9 +26,8 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeMovieRepository_0 extends _i1.SmartFake
-    implements _i2.MovieRepository {
-  _FakeMovieRepository_0(
+class _FakeIUseCase_0<T> extends _i1.SmartFake implements _i2.IUseCase<T> {
+  _FakeIUseCase_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -46,13 +45,13 @@ class MockMoviesBloc extends _i1.Mock implements _i3.MoviesBloc {
   }
 
   @override
-  _i2.MovieRepository get movieRepository => (super.noSuchMethod(
-        Invocation.getter(#movieRepository),
-        returnValue: _FakeMovieRepository_0(
+  _i2.IUseCase<dynamic> get moviesUsecase => (super.noSuchMethod(
+        Invocation.getter(#moviesUsecase),
+        returnValue: _FakeIUseCase_0<dynamic>(
           this,
-          Invocation.getter(#movieRepository),
+          Invocation.getter(#moviesUsecase),
         ),
-      ) as _i2.MovieRepository);
+      ) as _i2.IUseCase<dynamic>);
 
   @override
   _i4.Stream<List<_i5.Movie>> get moviesStream => (super.noSuchMethod(
@@ -70,11 +69,12 @@ class MockMoviesBloc extends _i1.Mock implements _i3.MoviesBloc {
       );
 
   @override
-  _i4.Future<void> getPopularMovies(_i6.DataSource? dataSource) =>
+  _i4.Future<void> getPopularMovies({_i6.DataSource? dataSource}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPopularMovies,
-          [dataSource],
+          [],
+          {#dataSource: dataSource},
         ),
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),

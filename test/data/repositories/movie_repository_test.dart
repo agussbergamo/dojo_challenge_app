@@ -2,7 +2,7 @@ import 'package:dojo_challenge_app/core/parameter/data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
-import 'package:dojo_challenge_app/data/repositories/movie_repository.dart';
+import 'package:dojo_challenge_app/data/repositories/movies_repository.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -22,7 +22,7 @@ void main() {
   late MockDatabaseDataSource mockDatabaseDataSource;
   late MockFirestoreDataSource mockFirestoreDataSource;
   late MockConnectivity mockConnectivity;
-  late MovieRepository movieRepository;
+  late MoviesRepository moviesRepository;
 
   final Movie mockMovie = Movie.fromJson({
     "adult": false,
@@ -44,7 +44,7 @@ void main() {
     mockDatabaseDataSource = MockDatabaseDataSource();
     mockFirestoreDataSource = MockFirestoreDataSource();
     mockConnectivity = MockConnectivity();
-    movieRepository = MovieRepository(
+    moviesRepository = MoviesRepository(
       apiDataSource: mockApiDataSource,
       databaseDataSource: mockDatabaseDataSource,
       firestoreDataSource: mockFirestoreDataSource,
@@ -64,7 +64,7 @@ void main() {
         mockConnectivity.checkConnectivity(),
       ).thenAnswer((_) async => [ConnectivityResult.wifi]);
 
-      final result = await movieRepository.getPopularMovies();
+      final result = await moviesRepository.getPopularMovies();
       expect(result, isA<List<Movie>>());
       verify(mockApiDataSource.getPopularMovies()).called(1);
       verifyNever(mockDatabaseDataSource.getPopularMovies());
@@ -79,7 +79,7 @@ void main() {
         mockFirestoreDataSource.getPopularMovies(),
       ).thenAnswer((_) async => [mockMovie]);
 
-      final result = await movieRepository.getPopularMovies(
+      final result = await moviesRepository.getPopularMovies(
         dataSource: DataSource.firestore,
       );
       expect(result, isA<List<Movie>>());
@@ -96,7 +96,7 @@ void main() {
         mockDatabaseDataSource.getPopularMovies(),
       ).thenAnswer((_) async => [mockMovie]);
 
-      final result = await movieRepository.getPopularMovies(
+      final result = await moviesRepository.getPopularMovies(
         dataSource: DataSource.local,
       );
       expect(result, isA<List<Movie>>());
@@ -120,7 +120,7 @@ void main() {
         mockDatabaseDataSource.getPopularMovies(),
       ).thenAnswer((_) async => <Movie>[]);
 
-      final result = await movieRepository.getPopularMovies();
+      final result = await moviesRepository.getPopularMovies();
       expect(result, isA<List<Movie>>());
       verify(mockDatabaseDataSource.getPopularMovies()).called(1);
       verifyNever(mockApiDataSource.getPopularMovies());
@@ -139,7 +139,7 @@ void main() {
       ).thenAnswer((_) async => [ConnectivityResult.wifi]);
 
       expect(
-        () => movieRepository.getPopularMovies(),
+        () => moviesRepository.getPopularMovies(),
         throwsA(isA<Exception>()),
       );
     },

@@ -56,7 +56,9 @@ final moviesBlocProvider = Provider<MoviesBloc>((ref) {
 });
 
 final authStateProvider = ChangeNotifierProvider<AuthState>((ref) {
-  return AuthState();
+  final authState = AuthState();
+  authState.init();
+  return authState;
 });
 
 final goRouterProvider = Provider<GoRouter>((ref) {

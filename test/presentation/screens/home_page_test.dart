@@ -87,7 +87,7 @@ void main() {
         mockMoviesBloc.moviesStream,
       ).thenAnswer((_) => Stream.value([mockMovie]));
       when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
-      when(mockMoviesBloc.getPopularMovies(null)).thenAnswer((_) async {});
+      when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
       when(mockAuthState.loggedIn).thenReturn(true);
 
       await tester.pumpWidget(
@@ -142,7 +142,7 @@ void main() {
         mockMoviesBloc.moviesStream,
       ).thenAnswer((_) => Stream.value([mockMovie]));
       when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
-      when(mockMoviesBloc.getPopularMovies(null)).thenAnswer((_) async {});
+      when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
       when(mockAuthState.loggedIn).thenReturn(false);
 
       await tester.pumpWidget(
