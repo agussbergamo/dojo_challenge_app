@@ -16,12 +16,14 @@ void main() {
 
   final Movie mockMovie = Movie.fromJson({
     "adult": false,
+    "backdrop_path": "/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg",
     "id": 1197306,
     "original_language": "en",
     "original_title": "A Working Man",
     "overview":
         "Levon Cade left behind a decorated military career in the black ops to live a simple life working construction. But when his boss's daughter, who is like family to him, is taken by human traffickers, his search to bring her home uncovers a world of corruption far greater than he ever could have imagined.",
     "popularity": 633.0389,
+    "poster_path": "/6FRFIogh3zFnVWn7Z6zcYnIbRcX.jpg",
     "release_date": "2025-03-26",
     "title": "A Working Man",
     "video": false,
@@ -97,24 +99,25 @@ void main() {
     },
   );
 
-  testWidgets('PopularMovies screen shows a ListView when the Stream has data', (
-    WidgetTester tester,
-  ) async {
-    when(
-      mockMoviesBloc.moviesStream,
-    ).thenAnswer((_) => Stream.value([mockMovie]));
-    when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
-    when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
+  testWidgets(
+    'PopularMovies screen shows a ListView when the Stream has data',
+    (WidgetTester tester) async {
+      when(
+        mockMoviesBloc.moviesStream,
+      ).thenAnswer((_) => Stream.value([mockMovie]));
+      when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
+      when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [moviesBlocProvider.overrideWithValue(mockMoviesBloc)],
-        child: const MaterialApp(home: PopularMovies()),
-      ),
-    );
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [moviesBlocProvider.overrideWithValue(mockMoviesBloc)],
+          child: const MaterialApp(home: PopularMovies()),
+        ),
+      );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    await tester.pump();
-    expect(find.byType(ListView), findsOneWidget);
-  });
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      await tester.pump();
+      expect(find.byType(ListView), findsOneWidget);
+    },
+  );
 }

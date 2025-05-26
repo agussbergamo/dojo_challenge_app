@@ -15,12 +15,14 @@ void main() {
 
   final Movie mockMovie = Movie.fromJson({
     "adult": false,
+    "backdrop_path": "/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg",
     "id": 1197306,
     "original_language": "en",
     "original_title": "A Working Man",
     "overview":
         "Levon Cade left behind a decorated military career in the black ops to live a simple life working construction. But when his boss's daughter, who is like family to him, is taken by human traffickers, his search to bring her home uncovers a world of corruption far greater than he ever could have imagined.",
     "popularity": 633.0389,
+    "poster_path": "/6FRFIogh3zFnVWn7Z6zcYnIbRcX.jpg",
     "release_date": "2025-03-26",
     "title": "A Working Man",
     "video": false,

@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Movie` (`adult` INTEGER NOT NULL, `id` INTEGER NOT NULL, `originalLanguage` TEXT NOT NULL, `originalTitle` TEXT NOT NULL, `overview` TEXT NOT NULL, `popularity` REAL NOT NULL, `releaseDate` TEXT NOT NULL, `title` TEXT NOT NULL, `video` INTEGER NOT NULL, `voteAverage` REAL NOT NULL, `voteCount` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Movie` (`adult` INTEGER NOT NULL, `backdropPath` TEXT NOT NULL, `id` INTEGER NOT NULL, `originalLanguage` TEXT NOT NULL, `originalTitle` TEXT NOT NULL, `overview` TEXT NOT NULL, `popularity` REAL NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL, `title` TEXT NOT NULL, `video` INTEGER NOT NULL, `voteAverage` REAL NOT NULL, `voteCount` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -120,11 +120,13 @@ class _$MovieDao extends MovieDao {
             'Movie',
             (Movie item) => <String, Object?>{
                   'adult': item.adult ? 1 : 0,
+                  'backdropPath': item.backdropPath,
                   'id': item.id,
                   'originalLanguage': item.originalLanguage,
                   'originalTitle': item.originalTitle,
                   'overview': item.overview,
                   'popularity': item.popularity,
+                  'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
                   'title': item.title,
                   'video': item.video ? 1 : 0,
@@ -146,11 +148,13 @@ class _$MovieDao extends MovieDao {
         'Select * from Movie ORDER BY popularity DESC LIMIT 20',
         mapper: (Map<String, Object?> row) => Movie(
             adult: (row['adult'] as int) != 0,
+            backdropPath: row['backdropPath'] as String,
             id: row['id'] as int,
             originalLanguage: row['originalLanguage'] as String,
             originalTitle: row['originalTitle'] as String,
             overview: row['overview'] as String,
             popularity: row['popularity'] as double,
+            posterPath: row['posterPath'] as String,
             releaseDate: row['releaseDate'] as String,
             title: row['title'] as String,
             video: (row['video'] as int) != 0,

@@ -17,17 +17,20 @@ void main() {
     "results": [
       {
         "adult": false,
+        "backdrop_path": "/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg",
+        "genre_ids": [28, 80, 53],
         "id": 1197306,
         "original_language": "en",
         "original_title": "A Working Man",
         "overview":
             "Levon Cade left behind a decorated military career in the black ops to live a simple life working construction. But when his boss's daughter, who is like family to him, is taken by human traffickers, his search to bring her home uncovers a world of corruption far greater than he ever could have imagined.",
-        "popularity": 633.0389,
+        "popularity": 308.2204,
+        "poster_path": "/6FRFIogh3zFnVWn7Z6zcYnIbRcX.jpg",
         "release_date": "2025-03-26",
         "title": "A Working Man",
         "video": false,
-        "vote_average": 6.4,
-        "vote_count": 477,
+        "vote_average": 6.65,
+        "vote_count": 908,
       },
     ],
     "total_pages": 49999,

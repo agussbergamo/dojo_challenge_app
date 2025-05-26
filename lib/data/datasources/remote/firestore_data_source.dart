@@ -10,11 +10,13 @@ class FirestoreDataSource implements IDataSource {
   Future<void> saveMovie(Movie movie) async {
     await firestore.collection('movies').doc(movie.id.toString()).set({
       'adult': movie.adult,
+      'backdrop_path': movie.backdropPath,
       'id': movie.id,
       'original_language': movie.originalLanguage,
       'original_title': movie.originalTitle,
       'overview': movie.overview,
       'popularity': movie.popularity,
+      'poster_path': movie.posterPath,
       'release_date': movie.releaseDate,
       'title': movie.title,
       'video': movie.video,
