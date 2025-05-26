@@ -1,6 +1,7 @@
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
+import 'package:dojo_challenge_app/presentation/widgets/movie_card.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +43,12 @@ class _PopularMoviesState extends ConsumerState<PopularMovies> {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return ListTile(title: Text(snapshot.data![index].title));
+                  return MovieCard(
+                    imageUrl: snapshot.data![index].fullPoster,
+                    overview: snapshot.data![index].overview,
+                    title: snapshot.data![index].title,
+                    voteAverage: snapshot.data![index].voteAverage / 2,
+                  );
                 },
               );
             }

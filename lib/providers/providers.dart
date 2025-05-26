@@ -7,8 +7,8 @@ import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source
 import 'package:dojo_challenge_app/data/repositories/movies_repository.dart';
 import 'package:dojo_challenge_app/domain/usecases/implementations/movies_usecase.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
-import 'package:dojo_challenge_app/presentation/screens/home_page.dart';
-import 'package:dojo_challenge_app/presentation/screens/popular_movies.dart';
+import 'package:dojo_challenge_app/presentation/widgets/home_page.dart';
+import 'package:dojo_challenge_app/presentation/widgets/popular_movies.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide AuthState;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
