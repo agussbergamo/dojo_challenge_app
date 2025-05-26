@@ -76,7 +76,7 @@ class MyHomePage extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 60),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -99,7 +99,7 @@ class MyHomePage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 30),
                 DataSourceCard(
-                  icon: Icons.cloud,
+                  icon: Icons.public,
                   label: 'API',
                   source: DataSource.api,
                   loggedIn: authState.loggedIn,

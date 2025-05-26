@@ -29,7 +29,9 @@ class _PopularMoviesState extends ConsumerState<PopularMovies> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text('Popular Movies')),
+        appBar: AppBar(
+          title: Text('Popular Movies', style: TextStyle(fontSize: 18)),
+        ),
         body: StreamBuilder<List<Movie>>(
           stream: moviesBloc.moviesStream,
           builder: (context, snapshot) {
