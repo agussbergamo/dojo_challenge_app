@@ -3,8 +3,8 @@ import 'package:dojo_challenge_app/core/parameter/data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
-import 'package:dojo_challenge_app/presentation/screens/home_page.dart';
-import 'package:dojo_challenge_app/presentation/screens/popular_movies.dart';
+import 'package:dojo_challenge_app/presentation/widgets/home_page.dart';
+import 'package:dojo_challenge_app/presentation/widgets/popular_movies.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,14 +76,14 @@ void main() {
     );
   });
 
-  setUp(() {
+  setUpAll(() async {
     mockDatabaseDataSource = MockDatabaseDataSource();
     mockMoviesBloc = MockMoviesBloc();
     mockAuthState = MockAuthState();
   });
 
   testWidgets(
-    'Home screen renders and navigates to popular movies screen when the user is loggedIn',
+    'Home screen renders correctly and navigates to popular movies screen when the user is loggedIn',
     (WidgetTester tester) async {
       when(
         mockMoviesBloc.moviesStream,
@@ -91,6 +91,7 @@ void main() {
       when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
       when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
       when(mockAuthState.loggedIn).thenReturn(true);
+      when(mockAuthState.currentUser).thenReturn(null);
 
       await tester.pumpWidget(
         ProviderScope(
@@ -100,17 +101,33 @@ void main() {
             ),
             moviesBlocProvider.overrideWithValue(mockMoviesBloc),
             authStateProvider.overrideWith((ref) => mockAuthState),
+            goRouterProvider.overrideWith(
+              (ref) => ref.watch(testRouterProvider),
+            ),
           ],
           child: TestApp(),
         ),
       );
 
-      expect(find.text('Wanna see some popular movies?'), findsOneWidget);
+      expect(find.text('Great to see you around, user!'), findsOneWidget);
+      expect(find.text('Logout'), findsOneWidget);
+      expect(find.text('Welcome to the tiniest Movies App!'), findsOneWidget);
+      expect(
+        find.text(
+          "Looking for the hottest movies right now? You've come to the right place!",
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Please let us know where do you want us to get your movies from:',
+        ),
+        findsOneWidget,
+      );
       expect(find.text('API'), findsOneWidget);
       expect(find.text('Local DB'), findsOneWidget);
       expect(find.text('Firestore'), findsOneWidget);
-      expect(find.text('Logout'), findsOneWidget);
-      expect(find.byType(OutlinedButton), findsNWidgets(4));
+      expect(find.byType(Icon), findsNWidgets(5));
 
       // Navigates with API
       await tester.tap(find.text('API'));
@@ -138,7 +155,7 @@ void main() {
   );
 
   testWidgets(
-    'Home screen renders and navigates to login screen when the user is NOT loggedIn',
+    'Home screen renders correctly and navigates to login screen when the user is NOT loggedIn',
     (WidgetTester tester) async {
       when(
         mockMoviesBloc.moviesStream,
@@ -146,6 +163,7 @@ void main() {
       when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
       when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
       when(mockAuthState.loggedIn).thenReturn(false);
+      when(mockAuthState.currentUser).thenReturn(null);
 
       await tester.pumpWidget(
         ProviderScope(
@@ -163,12 +181,28 @@ void main() {
         ),
       );
 
-      expect(find.text('Wanna see some popular movies?'), findsOneWidget);
+      expect(
+        find.text('You need to be logged in to see our awesome content!'),
+        findsOneWidget,
+      );
+      expect(find.text('Login'), findsOneWidget);
+      expect(find.text('Welcome to the tiniest Movies App!'), findsOneWidget);
+      expect(
+        find.text(
+          "Looking for the hottest movies right now? You've come to the right place!",
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Please let us know where do you want us to get your movies from:',
+        ),
+        findsOneWidget,
+      );
       expect(find.text('API'), findsOneWidget);
       expect(find.text('Local DB'), findsOneWidget);
       expect(find.text('Firestore'), findsOneWidget);
-      expect(find.text('Login'), findsOneWidget);
-      expect(find.byType(OutlinedButton), findsNWidgets(4));
+      expect(find.byType(Icon), findsNWidgets(5));
 
       // Navigates with API
       await tester.tap(find.text('API'));

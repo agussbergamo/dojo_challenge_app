@@ -12,7 +12,7 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-    final user = FirebaseAuth.instance.currentUser;
+    final user = authState.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -21,15 +21,12 @@ class MyHomePage extends ConsumerWidget {
           children: const [
             Icon(Icons.movie_outlined, color: Colors.white),
             SizedBox(width: 8),
-            Text(
-              'Flutter & Furious',
-              style: TextStyle(fontSize: 18),
-            ),
+            Text('Flutter & Furious', style: TextStyle(fontSize: 18)),
           ],
         ),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
         child: Column(
           children: [
@@ -80,51 +77,48 @@ class MyHomePage extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 40),
-
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Welcome to the tiniest Movies App!',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    "Looking for the hottest movies right now? You've come to the right place!",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Please let us know where do you want us to get your movies from:',
-                    style: TextStyle(fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 30),
-                  DataSourceCard(
-                    icon: Icons.cloud,
-                    label: 'API',
-                    source: DataSource.api,
-                    loggedIn: authState.loggedIn,
-                  ),
-                  const SizedBox(height: 12),
-                  DataSourceCard(
-                    icon: Icons.storage,
-                    label: 'Local DB',
-                    source: DataSource.local,
-                    loggedIn: authState.loggedIn,
-                  ),
-                  const SizedBox(height: 12),
-                  DataSourceCard(
-                    icon: Icons.cloud_upload,
-                    label: 'Firestore',
-                    source: DataSource.firestore,
-                    loggedIn: authState.loggedIn,
-                  ),
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Welcome to the tiniest Movies App!',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  "Looking for the hottest movies right now? You've come to the right place!",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Please let us know where do you want us to get your movies from:',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 30),
+                DataSourceCard(
+                  icon: Icons.cloud,
+                  label: 'API',
+                  source: DataSource.api,
+                  loggedIn: authState.loggedIn,
+                ),
+                const SizedBox(height: 12),
+                DataSourceCard(
+                  icon: Icons.storage,
+                  label: 'Local DB',
+                  source: DataSource.local,
+                  loggedIn: authState.loggedIn,
+                ),
+                const SizedBox(height: 12),
+                DataSourceCard(
+                  icon: Icons.cloud_upload,
+                  label: 'Firestore',
+                  source: DataSource.firestore,
+                  loggedIn: authState.loggedIn,
+                ),
+              ],
             ),
           ],
         ),

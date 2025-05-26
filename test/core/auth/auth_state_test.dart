@@ -14,9 +14,11 @@ void main() {
   late MockFirebaseAuth mockAuth;
   late StreamController<User?> userStreamController;
   late bool providersConfigured;
+  late User mockUser;
 
   setUp(() {
     mockAuth = MockFirebaseAuth();
+    mockUser = MockUser();
     userStreamController = StreamController<User?>();
     providersConfigured = false;
   });
@@ -63,5 +65,13 @@ void main() {
     await Future.delayed(Duration(milliseconds: 10));
 
     expect(authState.loggedIn, false);
+  });
+
+  test('should return currentUser correctly', () {
+    when(mockAuth.currentUser).thenReturn(mockUser);
+
+    final authState = AuthState(firebaseAuth: mockAuth);
+
+    expect(authState.currentUser, mockUser);
   });
 }

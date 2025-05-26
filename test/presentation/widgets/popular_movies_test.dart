@@ -1,6 +1,6 @@
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
-import 'package:dojo_challenge_app/presentation/screens/popular_movies.dart';
+import 'package:dojo_challenge_app/presentation/widgets/popular_movies.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -19,6 +19,7 @@ class AuthState extends ChangeNotifier {
 
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
+  User? get currentUser => _firebaseAuth.currentUser;
 
   Future<void> init() async {
     _configureProviders([EmailAuthProvider()]);

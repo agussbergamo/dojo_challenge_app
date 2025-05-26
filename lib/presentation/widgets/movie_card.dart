@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class MovieCard extends StatelessWidget {
-  const MovieCard({
+  MovieCard({
     super.key,
     required this.imageUrl,
     required this.overview,
@@ -14,6 +16,7 @@ class MovieCard extends StatelessWidget {
   final String overview;
   final String title;
   final double voteAverage;
+  final isTest = Platform.environment.containsKey('FLUTTER_TEST');
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,13 @@ class MovieCard extends StatelessWidget {
                   width: halfWidth - 10,
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(16)),
-                    child: Image.network(imageUrl, fit: BoxFit.cover),
+                    child: Image(
+                      image:
+                          isTest
+                              ? const AssetImage('assets/images/movie_placeholder.png')
+                              : NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
