@@ -4,4 +4,4 @@ Simple Flutter app to integrate some features and good practices of design and c
 
 App screenshots: 
 
-| ![Home Screen](assets/images/home_screen.png) | ![Popular Movies Screen](assets/images/popular_movies.png) |
+| ![Home Screen](assets/images/home_page.png) | ![Popular Movies Screen](assets/images/popular_movies.png) |
