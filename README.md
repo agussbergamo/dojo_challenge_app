@@ -4,4 +4,7 @@ Simple Flutter app to integrate some features and good practices of design and c
 
 App screenshots: 
 
-| ![Home Screen](assets/images/home_page.png) | ![Popular Movies Screen](assets/images/popular_movies.png) |
+<p align="center">
+  <img src="assets/images/home_page.png" alt="Home Screen" width="350"/>
+  <img src="assets/images/popular_movies.png" alt="Popular Movies Screen" width="350"/>
+</p>
