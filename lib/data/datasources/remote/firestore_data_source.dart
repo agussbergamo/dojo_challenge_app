@@ -27,7 +27,12 @@ class FirestoreDataSource implements IDataSource {
 
   @override
   Future<List<Movie>> getPopularMovies() async {
-    final snapshot = await firestore.collection('movies').get();
+    final snapshot =
+        await firestore
+            .collection('movies')
+            .orderBy('popularity', descending: true)
+            .limit(20)
+            .get();
     final movies =
         snapshot.docs.map((doc) {
           final data = doc.data();
