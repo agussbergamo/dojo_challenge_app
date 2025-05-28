@@ -14,8 +14,10 @@ class PopularMovies extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PopularMoviesState();
 }
 
-class _PopularMoviesState extends ConsumerState<PopularMovies> {
+class _PopularMoviesState extends ConsumerState<PopularMovies>
+    with SingleTickerProviderStateMixin {
   late final MoviesBloc moviesBloc;
+  late AnimationController _animationController;
 
   @override
   void initState() {
@@ -23,6 +25,16 @@ class _PopularMoviesState extends ConsumerState<PopularMovies> {
     moviesBloc = ref.read(moviesBlocProvider);
     moviesBloc.initialize();
     moviesBloc.getPopularMovies(dataSource: widget.dataSource);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,16 +54,36 @@ class _PopularMoviesState extends ConsumerState<PopularMovies> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('No movies found'));
             } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return MovieCard(
-                    imageUrl: snapshot.data![index].fullPoster,
-                    overview: snapshot.data![index].overview,
-                    title: snapshot.data![index].title,
-                    voteAverage: snapshot.data![index].voteAverage / 2,
-                  );
-                },
+              if (!_animationController.isAnimating &&
+                  _animationController.status == AnimationStatus.dismissed) {
+                _animationController.forward();
+              }
+              return AnimatedBuilder(
+                animation: _animationController,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return MovieCard(
+                      imageUrl: snapshot.data![index].fullPoster,
+                      overview: snapshot.data![index].overview,
+                      title: snapshot.data![index].title,
+                      voteAverage: snapshot.data![index].voteAverage / 2,
+                    );
+                  },
+                ),
+                builder:
+                    (context, child) => SlideTransition(
+                      position: Tween(
+                        begin: const Offset(0, 1.2),
+                        end: const Offset(0, 0),
+                      ).animate(
+                        CurvedAnimation(
+                          parent: _animationController,
+                          curve: Curves.easeInOut,
+                        ),
+                      ),
+                      child: child,
+                    ),
               );
             }
           },
