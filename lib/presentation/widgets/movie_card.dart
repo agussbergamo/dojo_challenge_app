@@ -1,25 +1,21 @@
 import 'dart:io';
 
+import 'package:dojo_challenge_app/domain/entities/movie.dart';
+import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class MovieCard extends StatelessWidget {
-  MovieCard({
-    super.key,
-    required this.imageUrl,
-    required this.overview,
-    required this.title,
-    required this.voteAverage,
-  });
+class MovieCard extends ConsumerWidget {
+  MovieCard({super.key, required this.movie});
 
-  final String imageUrl;
-  final String overview;
-  final String title;
-  final double voteAverage;
+  final Movie movie;
   final isTest = Platform.environment.containsKey('FLUTTER_TEST');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
     return LayoutBuilder(
       builder: (context, constraints) {
         final halfWidth = constraints.maxWidth / 2;
@@ -39,8 +35,10 @@ class MovieCard extends StatelessWidget {
                     child: Image(
                       image:
                           isTest
-                              ? const AssetImage('assets/images/movie_placeholder.png')
-                              : NetworkImage(imageUrl),
+                              ? const AssetImage(
+                                'assets/images/movie_placeholder.png',
+                              )
+                              : NetworkImage(movie.fullPoster),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -56,7 +54,7 @@ class MovieCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          movie.title,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -68,7 +66,7 @@ class MovieCard extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              voteAverage.toStringAsFixed(1),
+                              (movie.voteAverage / 2).toStringAsFixed(1),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -76,7 +74,7 @@ class MovieCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             RatingBarIndicator(
-                              rating: voteAverage,
+                              rating: movie.voteAverage / 2,
                               itemBuilder:
                                   (context, index) => const Icon(
                                     Icons.star,
@@ -89,10 +87,34 @@ class MovieCard extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          overview,
-                          maxLines: 6,
-                          overflow: TextOverflow.ellipsis,
+                        Expanded(
+                          child: Text(
+                            movie.overview,
+                            maxLines: 10,
+                            overflow: TextOverflow.fade,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton.icon(
+                            onPressed: () {
+                              if (authState.loggedIn) {
+                                context.push(
+                                  '/movie-detail',
+                                  extra: {'movie': movie},
+                                );
+                              } else {
+                                context.push('/sign-in');
+                              }
+                            },
+                            icon: const Icon(Icons.add, color: Colors.white70),
+                            label: const Text(
+                              'More info',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          ),
                         ),
                       ],
                     ),

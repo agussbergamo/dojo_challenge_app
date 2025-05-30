@@ -38,7 +38,7 @@ class App extends ConsumerWidget {
       theme: ThemeData.dark(useMaterial3: true).copyWith(
         scaffoldBackgroundColor: Colors.black,
         colorScheme: const ColorScheme.dark(
-          primary: Colors.amber,
+          primary: Colors.limeAccent,
           onPrimary: Colors.black,
           surface: Color(0xFF1E1E1E),
           onSurface: Colors.white,

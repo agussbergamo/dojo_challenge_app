@@ -1,4 +1,5 @@
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
 import 'package:dojo_challenge_app/domain/repositories/i_movie_repository.dart';
 
@@ -21,20 +22,23 @@ class MoviesRepository implements IMoviesRepository {
   }) : connectivity = connectivityPlugin ?? Connectivity();
 
   @override
-  Future<List<Movie>> getPopularMovies({DataSource? dataSource}) async {
+  Future<List<Movie>> getMovies({
+    required Endpoint endpoint,
+    DataSource? dataSource,
+  }) async {
     final resolvedSource = dataSource ?? await _resolveDataSource();
 
     switch (resolvedSource) {
       case DataSource.api:
-        final movies = await apiDataSource.getPopularMovies();
+        final movies = await apiDataSource.getMovies(endpoint: endpoint);
         await _cacheMovies(movies);
         return movies;
 
       case DataSource.firestore:
-        return await firestoreDataSource.getPopularMovies();
+        return await firestoreDataSource.getMovies(endpoint: endpoint);
 
       case DataSource.local:
-        return await databaseDataSource.getPopularMovies();
+        return await databaseDataSource.getMovies(endpoint: endpoint);
     }
   }
 

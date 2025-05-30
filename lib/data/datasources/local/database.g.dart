@@ -163,6 +163,26 @@ class _$MovieDao extends MovieDao {
   }
 
   @override
+  Future<List<Movie>> getTopRatedMovies() async {
+    return _queryAdapter.queryList(
+        'Select * from Movie ORDER BY voteAverage DESC LIMIT 20',
+        mapper: (Map<String, Object?> row) => Movie(
+            adult: (row['adult'] as int) != 0,
+            backdropPath: row['backdropPath'] as String,
+            id: row['id'] as int,
+            originalLanguage: row['originalLanguage'] as String,
+            originalTitle: row['originalTitle'] as String,
+            overview: row['overview'] as String,
+            popularity: row['popularity'] as double,
+            posterPath: row['posterPath'] as String,
+            releaseDate: row['releaseDate'] as String,
+            title: row['title'] as String,
+            video: (row['video'] as int) != 0,
+            voteAverage: row['voteAverage'] as double,
+            voteCount: row['voteCount'] as int));
+  }
+
+  @override
   Future<void> insertMovie(Movie movie) async {
     await _movieInsertionAdapter.insert(movie, OnConflictStrategy.replace);
   }

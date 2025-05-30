@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dojo_challenge_app/core/auth/auth_state.dart';
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
 import 'package:dojo_challenge_app/data/repositories/movies_repository.dart';
+import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/domain/usecases/implementations/movies_usecase.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/presentation/widgets/home_page.dart';
-import 'package:dojo_challenge_app/presentation/widgets/popular_movies.dart';
+import 'package:dojo_challenge_app/presentation/widgets/movie_detail.dart';
+import 'package:dojo_challenge_app/presentation/widgets/movies_list.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' hide AuthState;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,6 +63,13 @@ final authStateProvider = ChangeNotifierProvider<AuthState>((ref) {
   authState.init();
   return authState;
 });
+
+final selectedEndpointProvider = StateProvider<Endpoint>(
+  (ref) => Endpoint.popular,
+);
+final selectedDataSourceProvider = StateProvider<DataSource>(
+  (ref) => DataSource.api,
+);
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -137,8 +147,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/popular-movies',
         builder: (context, state) {
-          final dataSource = state.extra as DataSource;
-          return PopularMovies(dataSource: dataSource);
+          final extras = state.extra as Map<String, dynamic>;
+          final endpoint = extras['endpoint'] as Endpoint;
+          final dataSource = extras['dataSource'] as DataSource;
+          return MoviesList(endpoint: endpoint, dataSource: dataSource);
+        },
+      ),
+      GoRoute(
+        path: '/movie-detail',
+        builder: (context, state) {
+          final movie = (state.extra as Map<String, Movie>)['movie']!;
+          return MovieDetail(movie: movie);
         },
       ),
     ],

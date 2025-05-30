@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/domain/usecases/interfaces/i_usecase.dart';
 
 import 'i_movies_bloc.dart';
@@ -19,9 +20,15 @@ class MoviesBloc implements IMoviesBloc {
   }
 
   @override
-  Future<void> getPopularMovies({DataSource? dataSource}) async {
-    List<Movie> popularMovies = await moviesUsecase.call(dataSource: dataSource);
-    _streamController.sink.add(popularMovies);
+  Future<void> getMovies({
+    required Endpoint endpoint,
+    DataSource? dataSource,
+  }) async {
+    List<Movie> movies = await moviesUsecase.call(
+      endpoint: endpoint,
+      dataSource: dataSource,
+    );
+    _streamController.sink.add(movies);
   }
 
   @override

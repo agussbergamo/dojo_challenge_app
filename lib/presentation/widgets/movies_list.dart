@@ -1,4 +1,5 @@
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/presentation/widgets/movie_card.dart';
@@ -6,15 +7,16 @@ import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PopularMovies extends ConsumerStatefulWidget {
+class MoviesList extends ConsumerStatefulWidget {
+  final Endpoint endpoint;
   final DataSource? dataSource;
-  const PopularMovies({super.key, this.dataSource});
+  const MoviesList({super.key, required this.endpoint, this.dataSource});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PopularMoviesState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MoviesListState();
 }
 
-class _PopularMoviesState extends ConsumerState<PopularMovies>
+class _MoviesListState extends ConsumerState<MoviesList>
     with SingleTickerProviderStateMixin {
   late final MoviesBloc moviesBloc;
   late AnimationController _animationController;
@@ -24,7 +26,10 @@ class _PopularMoviesState extends ConsumerState<PopularMovies>
     super.initState();
     moviesBloc = ref.read(moviesBlocProvider);
     moviesBloc.initialize();
-    moviesBloc.getPopularMovies(dataSource: widget.dataSource);
+    moviesBloc.getMovies(
+      endpoint: widget.endpoint,
+      dataSource: widget.dataSource,
+    );
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
@@ -42,7 +47,10 @@ class _PopularMoviesState extends ConsumerState<PopularMovies>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Popular Movies', style: TextStyle(fontSize: 18)),
+          title: Text(
+            '${widget.endpoint.value} Movies',
+            style: TextStyle(fontSize: 18),
+          ),
         ),
         body: StreamBuilder<List<Movie>>(
           stream: moviesBloc.moviesStream,
@@ -63,12 +71,7 @@ class _PopularMoviesState extends ConsumerState<PopularMovies>
                 child: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    return MovieCard(
-                      imageUrl: snapshot.data![index].fullPoster,
-                      overview: snapshot.data![index].overview,
-                      title: snapshot.data![index].title,
-                      voteAverage: snapshot.data![index].voteAverage / 2,
-                    );
+                    return MovieCard(movie: snapshot.data![index]);
                   },
                 ),
                 builder:
