@@ -13,10 +13,12 @@ class MoviesUseCase implements IUseCase {
   Future<List<Movie>> call({
     required Endpoint endpoint,
     DataSource? dataSource,
+    int? movieId,
   }) {
     return moviesRepository.getMovies(
       endpoint: endpoint,
       dataSource: dataSource,
+      movieId: movieId,
     );
   }
 }

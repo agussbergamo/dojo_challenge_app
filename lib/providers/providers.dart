@@ -8,6 +8,7 @@ import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source
 import 'package:dojo_challenge_app/data/repositories/movies_repository.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/domain/usecases/implementations/movies_usecase.dart';
+import 'package:dojo_challenge_app/presentation/bloc/movie_detail_bloc.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/presentation/widgets/home_page.dart';
 import 'package:dojo_challenge_app/presentation/widgets/movie_detail.dart';
@@ -56,6 +57,11 @@ final moviesUseCaseProvider = Provider<MoviesUseCase>((ref) {
 final moviesBlocProvider = Provider<MoviesBloc>((ref) {
   final moviesUseCase = ref.watch(moviesUseCaseProvider);
   return MoviesBloc(moviesUsecase: moviesUseCase);
+});
+
+final movieDetailBlocProvider = Provider<MovieDetailBloc>((ref) {
+  final moviesUseCase = ref.watch(moviesUseCaseProvider);
+  return MovieDetailBloc(moviesUsecase: moviesUseCase);
 });
 
 final authStateProvider = ChangeNotifierProvider<AuthState>((ref) {
@@ -156,8 +162,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/movie-detail',
         builder: (context, state) {
-          final movie = (state.extra as Map<String, Movie>)['movie']!;
-          return MovieDetail(movie: movie);
+          final extras = state.extra as Map<String, dynamic>;
+          final movie = extras['movie'] as Movie;
+          final endpoint = extras['endpoint'] as Endpoint;
+          final dataSource = extras['dataSource'] as DataSource;
+          return MovieDetail(
+            movie: movie,
+            endpoint: endpoint,
+            dataSource: dataSource,
+          );
         },
       ),
     ],

@@ -5,21 +5,26 @@ import 'package:dojo_challenge_app/domain/datasources/i_data_source.dart';
 import '../../../domain/entities/movie.dart';
 import 'package:http/http.dart' as http;
 
-class ApiDataSource implements IDataSource{
+class ApiDataSource implements IDataSource {
   final http.Client client;
 
   ApiDataSource({required this.client});
 
   @override
-  Future<List<Movie>> getMovies({required Endpoint endpoint}) async {
-    final url = Uri.parse(endpoint.fullUrl);
+  Future<List<Movie>> getMovies({
+    required Endpoint endpoint,
+    int? movieId,
+  }) async {
+    final url = Uri.parse(endpoint.getFullUrl(movieId));
     final response = await client.get(url);
 
     if (response.statusCode == 200) {
       var jsonResponse =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
       var results = jsonResponse['results'];
-      return List<Movie>.from(results.map((movie) => Movie.fromJson(movie)));
+      return List<Movie>.from(
+        results.map((movie) => Movie.fromJson(movie, endpoint)),
+      );
     } else {
       throw Exception('Failed to load movies');
     }

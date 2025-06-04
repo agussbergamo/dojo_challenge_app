@@ -71,7 +71,11 @@ class _MoviesListState extends ConsumerState<MoviesList>
                 child: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    return MovieCard(movie: snapshot.data![index]);
+                    return MovieCard(
+                      movie: snapshot.data![index],
+                      endpoint: widget.endpoint,
+                      dataSource: widget.dataSource,
+                    );
                   },
                 ),
                 builder:

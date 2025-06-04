@@ -3,5 +3,5 @@ import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 
 abstract class IMoviesRepository {
-  Future<List<Movie>> getMovies({DataSource? dataSource, required Endpoint endpoint});
+  Future<List<Movie>> getMovies({required Endpoint endpoint, DataSource? dataSource, int? movieId});
 }

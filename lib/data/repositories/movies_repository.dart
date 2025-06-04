@@ -25,20 +25,34 @@ class MoviesRepository implements IMoviesRepository {
   Future<List<Movie>> getMovies({
     required Endpoint endpoint,
     DataSource? dataSource,
+    int? movieId,
   }) async {
     final resolvedSource = dataSource ?? await _resolveDataSource();
 
     switch (resolvedSource) {
       case DataSource.api:
-        final movies = await apiDataSource.getMovies(endpoint: endpoint);
-        await _cacheMovies(movies);
+        final movies = await apiDataSource.getMovies(
+          endpoint: endpoint,
+          movieId: movieId,
+        );
+        await _cacheMovies(
+          movies: movies,
+          endpoint: endpoint,
+          baseMovieId: movieId,
+        );
         return movies;
 
       case DataSource.firestore:
-        return await firestoreDataSource.getMovies(endpoint: endpoint);
+        return await firestoreDataSource.getMovies(
+          endpoint: endpoint,
+          movieId: movieId,
+        );
 
       case DataSource.local:
-        return await databaseDataSource.getMovies(endpoint: endpoint);
+        return await databaseDataSource.getMovies(
+          endpoint: endpoint,
+          movieId: movieId,
+        );
     }
   }
 
@@ -49,10 +63,37 @@ class MoviesRepository implements IMoviesRepository {
         : DataSource.api;
   }
 
-  Future<void> _cacheMovies(List<Movie> movies) async {
-    for (var movie in movies) {
+  Future<void> _cacheMovies({
+    required List<Movie> movies,
+    required Endpoint endpoint,
+    int? baseMovieId,
+  }) async {
+    if (endpoint != Endpoint.recommendations) {
+      await databaseDataSource.deleteRecommendationsByMovieType(endpoint.value);
+      await firestoreDataSource.deleteRecommendationsByMovieType(
+        endpoint.value,
+      );
+      await databaseDataSource.deleteMoviesByType(endpoint.value);
+      await firestoreDataSource.deleteMoviesByType(endpoint.value);
+    }
+
+    for (int i = 0; i < movies.length; i++) {
+      final movie = movies[i];
       await databaseDataSource.insertMovie(movie);
-      await firestoreDataSource.saveMovie(movie);
+      await firestoreDataSource.insertMovie(movie);
+
+      if (endpoint == Endpoint.recommendations && baseMovieId != null) {
+        await databaseDataSource.insertRecommendedMovie(
+          baseMovieId: baseMovieId,
+          recommendedMovie: movie,
+          order: i,
+        );
+        await firestoreDataSource.insertRecommendedMovie(
+          baseMovieId: baseMovieId,
+          recommendedMovie: movie,
+          order: i,
+        );
+      }
     }
   }
 }

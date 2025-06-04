@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +10,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class MovieCard extends ConsumerWidget {
-  MovieCard({super.key, required this.movie});
+  MovieCard({
+    super.key,
+    required this.movie,
+    required this.endpoint,
+    this.dataSource,
+  });
 
   final Movie movie;
+  final Endpoint endpoint;
+  final DataSource? dataSource;
   final isTest = Platform.environment.containsKey('FLUTTER_TEST');
 
   @override
@@ -54,7 +63,7 @@ class MovieCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          movie.title,
+                          movie.title ?? 'No title available',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -66,7 +75,9 @@ class MovieCard extends ConsumerWidget {
                         Row(
                           children: [
                             Text(
-                              (movie.voteAverage / 2).toStringAsFixed(1),
+                              movie.voteAverage != null
+                                  ? (movie.voteAverage! / 2).toStringAsFixed(1)
+                                  : 'Not rated',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -74,7 +85,7 @@ class MovieCard extends ConsumerWidget {
                             ),
                             const SizedBox(width: 8),
                             RatingBarIndicator(
-                              rating: movie.voteAverage / 2,
+                              rating: (movie.voteAverage ?? 0.0) / 2,
                               itemBuilder:
                                   (context, index) => const Icon(
                                     Icons.star,
@@ -89,7 +100,7 @@ class MovieCard extends ConsumerWidget {
                         const SizedBox(height: 8),
                         Expanded(
                           child: Text(
-                            movie.overview,
+                            movie.overview ?? 'No overview available',
                             maxLines: 10,
                             overflow: TextOverflow.fade,
                             style: const TextStyle(fontSize: 14),
@@ -103,7 +114,11 @@ class MovieCard extends ConsumerWidget {
                               if (authState.loggedIn) {
                                 context.push(
                                   '/movie-detail',
-                                  extra: {'movie': movie},
+                                  extra: {
+                                    'movie': movie,
+                                    'endpoint': Endpoint.recommendations,
+                                    'dataSource': dataSource,
+                                  },
                                 );
                               } else {
                                 context.push('/sign-in');
