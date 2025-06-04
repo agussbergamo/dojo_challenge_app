@@ -7,6 +7,7 @@ import 'package:dojo_challenge_app/presentation/bloc/movie_detail_bloc.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class MovieDetail extends ConsumerStatefulWidget {
   const MovieDetail({
@@ -48,6 +49,13 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
           widget.movie.title ?? 'Movie',
           style: TextStyle(fontSize: 18),
         ),
+        leading:
+            context.canPop()
+                ? IconButton(
+                  onPressed: context.pop,
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                )
+                : null,
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -27,6 +27,13 @@ class MyHomePage extends ConsumerWidget {
           ],
         ),
         centerTitle: true,
+        leading:
+            context.canPop()
+                ? IconButton(
+                  onPressed: context.pop,
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                )
+                : null,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

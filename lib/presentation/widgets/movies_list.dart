@@ -6,6 +6,7 @@ import 'package:dojo_challenge_app/presentation/widgets/movie_card.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class MoviesList extends ConsumerStatefulWidget {
   final Endpoint endpoint;
@@ -51,6 +52,13 @@ class _MoviesListState extends ConsumerState<MoviesList>
             '${widget.endpoint.value} Movies',
             style: TextStyle(fontSize: 18),
           ),
+          leading:
+              context.canPop()
+                  ? IconButton(
+                    onPressed: context.pop,
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                  )
+                  : null,
         ),
         body: StreamBuilder<List<Movie>>(
           stream: moviesBloc.moviesStream,
