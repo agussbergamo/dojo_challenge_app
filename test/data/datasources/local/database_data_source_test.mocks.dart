@@ -3,14 +3,18 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:dojo_challenge_app/data/datasources/local/DAOs/movie_dao.dart'
     as _i2;
-import 'package:dojo_challenge_app/data/datasources/local/database.dart' as _i5;
-import 'package:dojo_challenge_app/domain/entities/movie.dart' as _i6;
+import 'package:dojo_challenge_app/data/datasources/local/DAOs/movie_recommendation_dao.dart'
+    as _i3;
+import 'package:dojo_challenge_app/data/datasources/local/database.dart' as _i6;
+import 'package:dojo_challenge_app/domain/entities/movie.dart' as _i7;
+import 'package:dojo_challenge_app/domain/entities/movie_recommendation.dart'
+    as _i8;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:sqflite/sqflite.dart' as _i4;
+import 'package:sqflite/sqflite.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -36,9 +40,9 @@ class _FakeMovieDao_0 extends _i1.SmartFake implements _i2.MovieDao {
         );
 }
 
-class _FakeStreamController_1<T> extends _i1.SmartFake
-    implements _i3.StreamController<T> {
-  _FakeStreamController_1(
+class _FakeMovieRecommendationDao_1 extends _i1.SmartFake
+    implements _i3.MovieRecommendationDao {
+  _FakeMovieRecommendationDao_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -47,9 +51,20 @@ class _FakeStreamController_1<T> extends _i1.SmartFake
         );
 }
 
-class _FakeDatabaseExecutor_2 extends _i1.SmartFake
-    implements _i4.DatabaseExecutor {
-  _FakeDatabaseExecutor_2(
+class _FakeStreamController_2<T> extends _i1.SmartFake
+    implements _i4.StreamController<T> {
+  _FakeStreamController_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeDatabaseExecutor_3 extends _i1.SmartFake
+    implements _i5.DatabaseExecutor {
+  _FakeDatabaseExecutor_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -61,7 +76,7 @@ class _FakeDatabaseExecutor_2 extends _i1.SmartFake
 /// A class which mocks [AppDatabase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAppDatabase extends _i1.Mock implements _i5.AppDatabase {
+class MockAppDatabase extends _i1.Mock implements _i6.AppDatabase {
   MockAppDatabase() {
     _i1.throwOnMissingStub(this);
   }
@@ -76,16 +91,25 @@ class MockAppDatabase extends _i1.Mock implements _i5.AppDatabase {
       ) as _i2.MovieDao);
 
   @override
-  _i3.StreamController<String> get changeListener => (super.noSuchMethod(
+  _i3.MovieRecommendationDao get movieRecommendationDao => (super.noSuchMethod(
+        Invocation.getter(#movieRecommendationDao),
+        returnValue: _FakeMovieRecommendationDao_1(
+          this,
+          Invocation.getter(#movieRecommendationDao),
+        ),
+      ) as _i3.MovieRecommendationDao);
+
+  @override
+  _i4.StreamController<String> get changeListener => (super.noSuchMethod(
         Invocation.getter(#changeListener),
-        returnValue: _FakeStreamController_1<String>(
+        returnValue: _FakeStreamController_2<String>(
           this,
           Invocation.getter(#changeListener),
         ),
-      ) as _i3.StreamController<String>);
+      ) as _i4.StreamController<String>);
 
   @override
-  set changeListener(_i3.StreamController<String>? _changeListener) =>
+  set changeListener(_i4.StreamController<String>? _changeListener) =>
       super.noSuchMethod(
         Invocation.setter(
           #changeListener,
@@ -95,16 +119,16 @@ class MockAppDatabase extends _i1.Mock implements _i5.AppDatabase {
       );
 
   @override
-  _i4.DatabaseExecutor get database => (super.noSuchMethod(
+  _i5.DatabaseExecutor get database => (super.noSuchMethod(
         Invocation.getter(#database),
-        returnValue: _FakeDatabaseExecutor_2(
+        returnValue: _FakeDatabaseExecutor_3(
           this,
           Invocation.getter(#database),
         ),
-      ) as _i4.DatabaseExecutor);
+      ) as _i5.DatabaseExecutor);
 
   @override
-  set database(_i4.DatabaseExecutor? _database) => super.noSuchMethod(
+  set database(_i5.DatabaseExecutor? _database) => super.noSuchMethod(
         Invocation.setter(
           #database,
           _database,
@@ -113,14 +137,14 @@ class MockAppDatabase extends _i1.Mock implements _i5.AppDatabase {
       );
 
   @override
-  _i3.Future<void> close() => (super.noSuchMethod(
+  _i4.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }
 
 /// A class which mocks [MovieDao].
@@ -132,21 +156,103 @@ class MockMovieDao extends _i1.Mock implements _i2.MovieDao {
   }
 
   @override
-  _i3.Future<List<_i6.Movie>> getPopularMovies() => (super.noSuchMethod(
+  _i4.Future<List<_i7.Movie>> getPopularMovies() => (super.noSuchMethod(
         Invocation.method(
           #getPopularMovies,
           [],
         ),
-        returnValue: _i3.Future<List<_i6.Movie>>.value(<_i6.Movie>[]),
-      ) as _i3.Future<List<_i6.Movie>>);
+        returnValue: _i4.Future<List<_i7.Movie>>.value(<_i7.Movie>[]),
+      ) as _i4.Future<List<_i7.Movie>>);
 
   @override
-  _i3.Future<void> insertMovie(_i6.Movie? movie) => (super.noSuchMethod(
+  _i4.Future<List<_i7.Movie>> getTopRatedMovies() => (super.noSuchMethod(
+        Invocation.method(
+          #getTopRatedMovies,
+          [],
+        ),
+        returnValue: _i4.Future<List<_i7.Movie>>.value(<_i7.Movie>[]),
+      ) as _i4.Future<List<_i7.Movie>>);
+
+  @override
+  _i4.Future<_i7.Movie?> getMovieById(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #getMovieById,
+          [id],
+        ),
+        returnValue: _i4.Future<_i7.Movie?>.value(),
+      ) as _i4.Future<_i7.Movie?>);
+
+  @override
+  _i4.Future<void> insertMovie(_i7.Movie? movie) => (super.noSuchMethod(
         Invocation.method(
           #insertMovie,
           [movie],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> deleteMoviesByType(String? type) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteMoviesByType,
+          [type],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+}
+
+/// A class which mocks [MovieRecommendationDao].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMovieRecommendationDao extends _i1.Mock
+    implements _i3.MovieRecommendationDao {
+  MockMovieRecommendationDao() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<void> insertRecommendation(
+          _i8.MovieRecommendation? recommendation) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #insertRecommendation,
+          [recommendation],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> insertRecommendations(
+          List<_i8.MovieRecommendation>? recommendations) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #insertRecommendations,
+          [recommendations],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<List<int>> getRecommendedIds(int? movieId) => (super.noSuchMethod(
+        Invocation.method(
+          #getRecommendedIds,
+          [movieId],
+        ),
+        returnValue: _i4.Future<List<int>>.value(<int>[]),
+      ) as _i4.Future<List<int>>);
+
+  @override
+  _i4.Future<void> deleteRecommendationsByMovieType(String? type) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteRecommendationsByMovieType,
+          [type],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

@@ -108,6 +108,7 @@ class MyHomePage extends ConsumerWidget {
                                       ),
                                       const SizedBox(height: 20),
                                       DropdownButtonFormField<Endpoint>(
+                                        key: const Key('endpointDropdown'),
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
@@ -153,6 +154,7 @@ class MyHomePage extends ConsumerWidget {
                                       ),
                                       const SizedBox(height: 30),
                                       DropdownButtonFormField<DataSource>(
+                                        key: const Key('dataSourceDropdown'),
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
@@ -196,7 +198,7 @@ class MyHomePage extends ConsumerWidget {
                                         onPressed: () {
                                           if (authState.loggedIn) {
                                             context.push(
-                                              '/popular-movies',
+                                              '/movies',
                                               extra: {
                                                 'endpoint': selectedEndpoint,
                                                 'dataSource':

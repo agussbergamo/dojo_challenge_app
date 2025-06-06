@@ -1,3 +1,4 @@
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:mockito/annotations.dart';
@@ -41,21 +42,39 @@ void main() {
     mockClient = MockClient();
   });
   test(
-    'getPopularMovies returns list of movies if the HTTP call is successful',
+    'getMovies returns a List of Movie if the HTTP call is successful and the endpoint is popular',
     () async {
       when(
         mockClient.get(any),
       ).thenAnswer((_) async => http.Response(jsonEncode(mockJson), 200));
 
       final apiDataSource = ApiDataSource(client: mockClient);
-      final movies = await apiDataSource.getPopularMovies();
+      final movies = await apiDataSource.getMovies(endpoint: Endpoint.popular);
 
       expect(movies, isA<List<Movie>>());
       expect(movies.first.title, equals('A Working Man'));
     },
   );
 
-  test('getPopularMovies throws an Exception if the HTTP call fails', () async {
+  test(
+    'getMovies returns a List of Movie if the HTTP call is successful and the endpoint is recommendations',
+    () async {
+      when(
+        mockClient.get(any),
+      ).thenAnswer((_) async => http.Response(jsonEncode(mockJson), 200));
+
+      final apiDataSource = ApiDataSource(client: mockClient);
+      final movies = await apiDataSource.getMovies(
+        endpoint: Endpoint.recommendations,
+        movieId: 1197306,
+      );
+
+      expect(movies, isA<List<Movie>>());
+      expect(movies.first.title, equals('A Working Man'));
+    },
+  );
+
+  test('getMovies throws an Exception if the HTTP call fails', () async {
     when(
       mockClient.get(any),
     ).thenAnswer((_) async => http.Response('Not Found', 404));
@@ -63,7 +82,7 @@ void main() {
     final apiDataSource = ApiDataSource(client: mockClient);
 
     expect(
-      () async => await apiDataSource.getPopularMovies(),
+      () async => await apiDataSource.getMovies(endpoint: Endpoint.topRated),
       throwsA(isA<Exception>()),
     );
   });

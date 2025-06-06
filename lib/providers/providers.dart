@@ -151,7 +151,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         ],
       ),
       GoRoute(
-        path: '/popular-movies',
+        path: '/movies',
         builder: (context, state) {
           final extras = state.extra as Map<String, dynamic>;
           final endpoint = extras['endpoint'] as Endpoint;

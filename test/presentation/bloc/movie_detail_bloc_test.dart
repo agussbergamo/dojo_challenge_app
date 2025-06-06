@@ -1,16 +1,17 @@
+import 'package:dojo_challenge_app/core/parameter/data_source.dart';
 import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/domain/usecases/implementations/movies_usecase.dart';
-import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
+import 'package:dojo_challenge_app/presentation/bloc/movie_detail_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'movies_bloc_test.mocks.dart';
+import 'movie_detail_bloc_test.mocks.dart';
 
 @GenerateMocks([MoviesUseCase])
 void main() {
-  late MoviesBloc bloc;
+  late MovieDetailBloc bloc;
   late MockMoviesUseCase mockMoviesUseCase;
 
   final Movie mockMovie = Movie.fromJson({
@@ -32,7 +33,7 @@ void main() {
 
   setUp(() {
     mockMoviesUseCase = MockMoviesUseCase();
-    bloc = MoviesBloc(moviesUsecase: mockMoviesUseCase);
+    bloc = MovieDetailBloc(moviesUsecase: mockMoviesUseCase);
   });
 
   tearDown(() {
@@ -45,9 +46,13 @@ void main() {
     await result;
   });
 
-  test('getMovies should emit movies from usecase', () async {
+  test('getRecommendedMovies should emit movies from usecase', () async {
     when(
-      mockMoviesUseCase.call(endpoint: Endpoint.popular),
+      mockMoviesUseCase.call(
+        endpoint: Endpoint.recommendations,
+        movieId: 1197306,
+        dataSource: null,
+      ),
     ).thenAnswer((_) async => [mockMovie]);
 
     final result = expectLater(
@@ -57,7 +62,36 @@ void main() {
       ]),
     );
 
-    await bloc.getMovies(endpoint: Endpoint.popular);
+    await bloc.getRecommendedMovies(
+      endpoint: Endpoint.recommendations,
+      movieId: 1197306,
+    );
+
+    await result;
+  });
+
+  test('getRecommendedMovies emits movies with explicit DataSource', () async {
+    when(
+      mockMoviesUseCase.call(
+        endpoint: Endpoint.recommendations,
+        movieId: 1197306,
+        dataSource: DataSource.local,
+      ),
+    ).thenAnswer((_) async => [mockMovie]);
+
+    final result = expectLater(
+      bloc.moviesStream,
+      emitsInOrder([
+        [mockMovie],
+      ]),
+    );
+
+    await bloc.getRecommendedMovies(
+      endpoint: Endpoint.recommendations,
+      movieId: 1197306,
+      dataSource: DataSource.local,
+    );
+
     await result;
   });
 }

@@ -1,10 +1,11 @@
 import 'package:dojo_challenge_app/core/auth/auth_state.dart';
 import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/presentation/bloc/movies_bloc.dart';
 import 'package:dojo_challenge_app/presentation/widgets/home_page.dart';
-import 'package:dojo_challenge_app/presentation/widgets/popular_movies.dart';
+import 'package:dojo_challenge_app/presentation/widgets/movies_list.dart';
 import 'package:dojo_challenge_app/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,7 +47,7 @@ void main() {
     "video": false,
     "vote_average": 6.4,
     "vote_count": 477,
-  });
+  }, Endpoint.popular);
 
   final testRouterProvider = Provider<GoRouter>((ref) {
     return GoRouter(
@@ -66,10 +67,12 @@ void main() {
           ],
         ),
         GoRoute(
-          path: '/popular-movies',
+          path: '/movies',
           builder: (context, state) {
-            final dataSource = state.extra as DataSource;
-            return PopularMovies(dataSource: dataSource);
+            return MoviesList(
+              endpoint: Endpoint.popular,
+              dataSource: DataSource.local,
+            );
           },
         ),
       ],
@@ -83,13 +86,15 @@ void main() {
   });
 
   testWidgets(
-    'Home screen renders correctly and navigates to popular movies screen when the user is loggedIn',
+    'Home screen renders correctly and navigates to MoviesList screen when the user is loggedIn',
     (WidgetTester tester) async {
       when(
         mockMoviesBloc.moviesStream,
       ).thenAnswer((_) => Stream.value([mockMovie]));
       when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
-      when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
+      when(
+        mockMoviesBloc.getMovies(endpoint: Endpoint.popular),
+      ).thenAnswer((_) async {});
       when(mockAuthState.loggedIn).thenReturn(true);
       when(mockAuthState.currentUser).thenReturn(null);
 
@@ -109,48 +114,37 @@ void main() {
         ),
       );
 
-      expect(find.text('Great to see you around, user!'), findsOneWidget);
+      expect(find.byIcon(Icons.movie_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.logout), findsOneWidget);
       expect(find.text('Logout'), findsOneWidget);
-      expect(find.text('Welcome to the tiniest Movies App!'), findsOneWidget);
       expect(
-        find.text(
-          "Looking for the hottest movies right now? You've come to the right place!",
-        ),
+        find.textContaining('Looking for the hottest movies right now'),
         findsOneWidget,
       );
       expect(
         find.text(
-          'Please let us know where do you want us to get your movies from:',
+          "You've come to the right place!\nJust pick two quick options and let the magic happen.",
         ),
         findsOneWidget,
       );
+      expect(
+        find.text("Which movie bunch speaks to your soul?"),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          "Let us show off a bit. We've got your movies stored in 3 different places, turn on your dev mode and pick your favorite!",
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Popular'), findsOneWidget);
       expect(find.text('API'), findsOneWidget);
-      expect(find.text('Local DB'), findsOneWidget);
-      expect(find.text('Firestore'), findsOneWidget);
-      expect(find.byType(Icon), findsNWidgets(5));
 
-      // Navigates with API
-      await tester.tap(find.text('API'));
+      final navigationButton = find.text('Take me there!');
+      await tester.ensureVisible(navigationButton);
+      await tester.tap(navigationButton);
       await tester.pumpAndSettle();
-      expect(find.byType(PopularMovies), findsOneWidget);
-
-      // Return to HomePage
-      await tester.tap(find.byTooltip('Back'));
-      await tester.pumpAndSettle();
-
-      // Navigates with Local DB
-      await tester.tap(find.text('Local DB'));
-      await tester.pumpAndSettle();
-      expect(find.byType(PopularMovies), findsOneWidget);
-
-      // Return to HomePage
-      await tester.tap(find.byTooltip('Back'));
-      await tester.pumpAndSettle();
-
-      // Navigates with Firestore
-      await tester.tap(find.text('Firestore'));
-      await tester.pumpAndSettle();
-      expect(find.byType(PopularMovies), findsOneWidget);
+      expect(find.byType(MoviesList), findsOneWidget);
     },
   );
 
@@ -161,7 +155,9 @@ void main() {
         mockMoviesBloc.moviesStream,
       ).thenAnswer((_) => Stream.value([mockMovie]));
       when(mockMoviesBloc.initialize()).thenAnswer((_) async {});
-      when(mockMoviesBloc.getPopularMovies()).thenAnswer((_) async {});
+      when(
+        mockMoviesBloc.getMovies(endpoint: Endpoint.popular),
+      ).thenAnswer((_) async {});
       when(mockAuthState.loggedIn).thenReturn(false);
       when(mockAuthState.currentUser).thenReturn(null);
 
@@ -181,51 +177,50 @@ void main() {
         ),
       );
 
-      expect(
-        find.text('You need to be logged in to see our awesome content!'),
-        findsOneWidget,
-      );
+      expect(find.byIcon(Icons.movie_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.login), findsOneWidget);
       expect(find.text('Login'), findsOneWidget);
-      expect(find.text('Welcome to the tiniest Movies App!'), findsOneWidget);
       expect(
-        find.text(
-          "Looking for the hottest movies right now? You've come to the right place!",
-        ),
+        find.text("We tried… but nope, still don't know who you are!"),
         findsOneWidget,
       );
       expect(
         find.text(
-          'Please let us know where do you want us to get your movies from:',
+          "Please log in to see all the awesome stuff we've got waiting!",
         ),
         findsOneWidget,
       );
-      expect(find.text('API'), findsOneWidget);
-      expect(find.text('Local DB'), findsOneWidget);
-      expect(find.text('Firestore'), findsOneWidget);
-      expect(find.byType(Icon), findsNWidgets(5));
 
-      // Navigates with API
-      await tester.tap(find.text('API'));
-      await tester.pumpAndSettle();
-      expect(find.text('Mock Login Screen'), findsOneWidget);
-
-      // Return to HomePage
-      await tester.tap(find.byTooltip('Back'));
-      await tester.pumpAndSettle();
-
-      // Navigates with Local DB
-      await tester.tap(find.text('Local DB'));
-      await tester.pumpAndSettle();
-      expect(find.text('Mock Login Screen'), findsOneWidget);
-
-      // Return to HomePage
-      await tester.tap(find.byTooltip('Back'));
-      await tester.pumpAndSettle();
-
-      // Navigates with Firestore
-      await tester.tap(find.text('Firestore'));
+      await tester.tap(find.text('Login'));
       await tester.pumpAndSettle();
       expect(find.text('Mock Login Screen'), findsOneWidget);
     },
   );
+
+  testWidgets('Dropdown menu items appear after tapping', (tester) async {
+    when(mockAuthState.loggedIn).thenReturn(true);
+    when(mockAuthState.currentUser).thenReturn(null);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith((ref) => mockAuthState),
+          goRouterProvider.overrideWith((ref) => ref.watch(testRouterProvider)),
+        ],
+        child: const TestApp(),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('endpointDropdown')));
+    await tester.pumpAndSettle();
+    expect(find.text('Top Rated'), findsOneWidget);
+    await tester.tap(find.text('Popular').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('dataSourceDropdown')));
+    await tester.pumpAndSettle();
+    expect(find.text('Local DB'), findsOneWidget);
+    expect(find.text('Firestore'), findsOneWidget);
+    await tester.tap(find.text('Firestore').last);
+  });
 }

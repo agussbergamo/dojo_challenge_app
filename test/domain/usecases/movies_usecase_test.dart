@@ -1,3 +1,4 @@
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/data/repositories/movies_repository.dart';
 import 'package:dojo_challenge_app/domain/entities/movie.dart';
 import 'package:dojo_challenge_app/domain/usecases/implementations/movies_usecase.dart';
@@ -27,7 +28,7 @@ void main() {
     "video": false,
     "vote_average": 6.4,
     "vote_count": 477,
-  });
+  }, Endpoint.popular);
 
   setUp(() {
     mockMoviesRepository = MockMoviesRepository();
@@ -36,13 +37,15 @@ void main() {
 
   test('should get popular movies from repository', () async {
     when(
-      mockMoviesRepository.getPopularMovies(),
+      mockMoviesRepository.getMovies(endpoint: Endpoint.popular),
     ).thenAnswer((_) async => [mockMovie]);
 
-    final result = await moviesUseCase.call();
+    final result = await moviesUseCase.call(endpoint: Endpoint.popular);
 
     expect(result, [mockMovie]);
-    verify(mockMoviesRepository.getPopularMovies()).called(1);
+    verify(
+      mockMoviesRepository.getMovies(endpoint: Endpoint.popular),
+    ).called(1);
     verifyNoMoreInteractions(mockMoviesRepository);
   });
 }

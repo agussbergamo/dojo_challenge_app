@@ -1,3 +1,5 @@
+import 'package:dojo_challenge_app/core/parameter/data_source.dart';
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart';
 import 'package:dojo_challenge_app/data/datasources/remote/firestore_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,8 +65,23 @@ void main() {
     expect(bloc, isA<MoviesBloc>());
   });
 
+  test('movieDetailBlocProvider provides MovieDetailBloc', () {
+    final bloc = container.read(movieDetailBlocProvider);
+    expect(bloc, isNotNull);
+  });
+
   test('goRouterProvider provides GoRouter', () {
     final router = container.read(goRouterProvider);
     expect(router, isNotNull);
+  });
+
+  test('selectedEndpointProvider provides default Endpoint.popular', () {
+    final endpoint = container.read(selectedEndpointProvider);
+    expect(endpoint, Endpoint.popular);
+  });
+
+  test('selectedDataSourceProvider provides default DataSource.api', () {
+    final dataSource = container.read(selectedDataSourceProvider);
+    expect(dataSource, DataSource.api);
   });
 }

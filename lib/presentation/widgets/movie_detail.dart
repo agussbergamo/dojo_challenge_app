@@ -67,6 +67,7 @@ class _MovieDetailState extends ConsumerState<MovieDetail> {
                   height: 400,
                   width: double.infinity,
                   child: Image(
+                    key: Key('backdropImage'),
                     image:
                         isTest
                             ? const AssetImage(

@@ -6,7 +6,8 @@
 import 'dart:async' as _i7;
 
 import 'package:connectivity_plus/connectivity_plus.dart' as _i5;
-import 'package:dojo_challenge_app/core/parameter/data_source.dart' as _i9;
+import 'package:dojo_challenge_app/core/parameter/data_source.dart' as _i10;
+import 'package:dojo_challenge_app/core/parameter/endpoint.dart' as _i9;
 import 'package:dojo_challenge_app/data/datasources/local/database_data_source.dart'
     as _i3;
 import 'package:dojo_challenge_app/data/datasources/remote/api_data_source.dart'
@@ -119,12 +120,20 @@ class MockMoviesRepository extends _i1.Mock implements _i6.MoviesRepository {
       ) as _i5.Connectivity);
 
   @override
-  _i7.Future<List<_i8.Movie>> getPopularMovies({_i9.DataSource? dataSource}) =>
+  _i7.Future<List<_i8.Movie>> getMovies({
+    required _i9.Endpoint? endpoint,
+    _i10.DataSource? dataSource,
+    int? movieId,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getPopularMovies,
+          #getMovies,
           [],
-          {#dataSource: dataSource},
+          {
+            #endpoint: endpoint,
+            #dataSource: dataSource,
+            #movieId: movieId,
+          },
         ),
         returnValue: _i7.Future<List<_i8.Movie>>.value(<_i8.Movie>[]),
       ) as _i7.Future<List<_i8.Movie>>);
